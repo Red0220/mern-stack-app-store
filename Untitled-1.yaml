@@ -1,0 +1,22 @@
+ * client side
+ reduxjs/toolkit
+ react-redux
+ redux-persist
+ react-toastify
+ @mui/material"
+ tailwind
+ firebase
+ moment
+ react-dom
+ react-router-dom
+
+
+ server side
+ bcryptjs
+ cookie-parser
+ cors
+ dotenv
+ express
+ jsonwebtoken
+ mongoose
+ nodemon
