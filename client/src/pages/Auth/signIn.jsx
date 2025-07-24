@@ -33,7 +33,11 @@ const SignIn = () => {
     try {
       dispatch(signinStart());
       const res = await login(formData).unwrap();
-      dispatch(signinSuccess(res));
+      
+      if(res.success){
+        dispatch(signinSuccess(res.user))
+        
+      }
       navigate('/'); // Redirect to home after successful sign in
     } catch (err) {
       dispatch(signinFailure(err));

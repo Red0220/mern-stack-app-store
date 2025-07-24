@@ -6,9 +6,10 @@ import { createProduct, deleteProduct, getProductById, getProducts } from "../co
 
 const router = express.Router();
 
-router.route('/add-product').post(verifyToken, verifyAdmin , validateProductInput, createProduct);
+router
+.route('/').post(verifyToken, verifyAdmin , validateProductInput, createProduct)
+.get(getProducts)
 router.route('/:productId').get(verifyToken, getProductById)
-router.route('/').get(getProducts)
-router.route('/delete/:productId').delete(verifyToken, verifyAdmin, deleteProduct)
+.delete(verifyToken, verifyAdmin, deleteProduct)
 
 export default router

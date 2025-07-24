@@ -41,7 +41,7 @@ const SignUp = () => {
       dispatch(signinStart());
       const res = await signUp(formData).unwrap();
 
-      dispatch(signinSuccess(res))
+      dispatch(signinSuccess())
       
       navigate('/signin'); // Redirect to login after successful sign up
     } catch (err) {
