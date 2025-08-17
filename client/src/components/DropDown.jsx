@@ -1,22 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-const DropDown = ({ userRole = "user", onOpen, onLogout, onSelect, to }) => {
+import { roleOptions } from "../data/userRoles";
+
+
+
+const DropDown = ({ userRole, onOpen, onLogout, onSelect }) => {
   const dropDownRef = useRef(null);
 
-  const roleOptions = {
-    user: [
-      { label: "Account", path: "/account" },
-      { label: "Settings", path: "/settings" },
-      { label: "Logout", path: null },
-    ],
-    admin: [
-      { label: "Dashboard", path: "/admin/dashboard" },
-      { label: "Products", path: "/admin/products" },
-      { label: "Orders", path: "/admin/orders" },
-      { label: "Logout", path: null },
-    ],
-  };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -25,9 +17,16 @@ const DropDown = ({ userRole = "user", onOpen, onLogout, onSelect, to }) => {
       }
     };
 
+    const handleEscape = (e) => {
+      if(e.key === 'Escape') {
+        onOpen(false);
+      }
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [onOpen]);
 
@@ -40,6 +39,8 @@ const DropDown = ({ userRole = "user", onOpen, onLogout, onSelect, to }) => {
     onOpen(false);
   };
   const options = roleOptions[userRole] || [];
+
+
   return (
     <div
       className="absolute right-0 top-20 w-48 shadow-lg rounded-md z-50 transform transition-all duration-200 ease-out origin-top-right"
@@ -47,28 +48,30 @@ const DropDown = ({ userRole = "user", onOpen, onLogout, onSelect, to }) => {
       role="menu"
       aria-orientation="vertical"
     >
-      <ul className="py-1">
+      <ul className="py-1 font-medium">
         {options.map((option, index) => (
           <li key={index} role="none">
             {option.path ? (
               <Link
                 to={option.path}
-                key={index}
-                className={`block px-4 py-2 text-sm text-gray-700  hover:bg-gray-100 cursor-pointer`}
+              
+                className={`flex gap-2 items-center px-4 py-2 text-sm text-gray-700  hover:bg-gray-100 cursor-pointer`}
                 role="menuitem"
                 onClick={() => handleSelect(option)}
               >
+                {option.icon}
                 {option.label}
               </Link>
             ) : (
-              <span
-                key={index}
+           
+                <button
                 onClick={() => handleSelect(option)}
-                className={`block px-4 py-2 text-sm text-gray-700  hover:bg-gray-100 cursor-pointer`}
+                className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900 text-left transition-colors"
                 role="menuitem"
               >
+                {option.icon}
                 {option.label}
-              </span>
+              </button>
             )}
           </li>
         ))}

@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 
 import Input from "../../components/Input"
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch} from 'react-redux'
 import { signinStart, signinFailure, signinSuccess } from '../../redux/userSlice/user.slice.js'
@@ -42,7 +41,7 @@ const SignIn = () => {
     } catch (err) {
       dispatch(signinFailure(err));
       console.error('Sign In Error:', err?.data?.message);
-      toast.error(err?.data?.message );
+     
     }
   }
 
@@ -84,7 +83,7 @@ const SignIn = () => {
           </button>
 
         </form>
-        {error && <p className='text-red-500'>{error?.data?.message}</p>}
+        {error && <p className='text-red-500'>incorrect email or password</p>}
         <p className='text-gray-500'>Don't have an account? <span className='text-blue-500 cursor-pointer' onClick={() => navigate('/signup')}>Sign up</span></p>
       </div>
 
