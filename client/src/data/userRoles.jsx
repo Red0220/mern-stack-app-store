@@ -1,19 +1,22 @@
 import { MdAccountCircle, MdDashboard } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
+import { IoAddCircle } from "react-icons/io5";
 import { FaBoxOpen, FaSignOutAlt } from "react-icons/fa";
 import { BiBell } from "react-icons/bi";
 
 export const roleOptions = {
     user: [
-      { label: "Account", path: "/account", icon: <MdAccountCircle /> },
-      { label: "Settings", path: "/settings", icon: <IoMdSettings /> },
+      { label: "Account", path: "/dashboard?tab=profile", icon: <MdAccountCircle /> },
       { label: "Notifications", path: "/notifications", icon: <BiBell /> },
+      { label: "Settings", path: "/settings", icon: <IoMdSettings /> },
       { label: "Logout", path: null, icon: <FaSignOutAlt /> },
     ],
     admin: [
-      { label: "Dashboard", path: "/admin/dashboard", icon: <MdDashboard /> },
-      { label: "Products", path: "/admin/products", icon: <FaBoxOpen /> },
-      { label: "Orders", path: "/admin/orders", icon: <IoMdSettings /> },
+
+      { label: "Add Product", path: "/dashboard?tab=AddProduct", icon: <IoAddCircle /> },
+      { label: "Dashboard", path: "/dashboard", icon: <MdDashboard /> },
+      { label: "Products", path: "/dashboard?tab=products", icon: <FaBoxOpen /> },
+      { label: "Orders", path: "/dashboard?tab=orders", icon: <IoMdSettings /> },
       { label: "Logout", path: null, icon: <FaSignOutAlt /> },
     ],
     guest: [
