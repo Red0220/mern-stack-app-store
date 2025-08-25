@@ -4,8 +4,13 @@ import Sidebar from './Sidebar'
 
 import Profile from '../../pages/Auth/Profile'
 import AddProduct from '../../pages/product/AddProduct'
-import Products from '../../pages/product/Products'
+import Products from '../../pages/admin/Products'
 import Orders from '../../pages/orders/Orders'
+import MdDashboard from '../../pages/admin/MdDashboard'
+import Settings from '../../pages/admin/Settings'
+import Users from '../../pages/admin/Users'
+
+
 
 const DashBoard = () => {
   
@@ -22,14 +27,24 @@ const DashBoard = () => {
     },[location.search])
     
   return (
-    <div>
+    <div className='flex gap-8 '>
      <Sidebar />
 
-    <div className="">
+    <div className="flex   p-4">
+        {/* user */}
          { tab === "profile" && <Profile/>}
-         { tab === "AddProduct" && <AddProduct/>}
+         
+
+         {/* Admin */}
+         { tab === "addproduct" && <AddProduct/>}
          {tab === "products" && <Products/>}
+         {tab === 'users' && <Users /> }
+         {tab === 'products' && <Products/>}
          { tab === 'orders' && <Orders/>}
+         {tab === 'analytics' && <MdDashboard/>}
+         {tab === 'settings' && <Settings/>}
+         
+       
     </div>
     </div>
   )

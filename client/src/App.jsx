@@ -34,7 +34,8 @@ const App = () => {
          
          {/* Admin */}
          <Route element={<AdminRoute />}>
-         <Route path="AddProduct" element={<AddProduct/>}/>
+         <Route path="addproduct" element={<AddProduct/>}/>
+         
          </Route>
 
       </Routes>

@@ -21,6 +21,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log("Current User:", user?.isAdmin);
 
   const handleLogout = async () => {
     try {
@@ -49,9 +50,9 @@ const Navbar = () => {
           <h1 className="text-xl font-semibold">Logo</h1>
         </Link>
 
-        <div className="flex items-center gap-4 sm:gap-6 text-lg sm:text-xl text-slate-800 justify-end">
+        <div className="flex  items-center gap-4 sm:gap-6 text-lg sm:text-xl text-slate-800 justify-end">
           <Link to={"/signup"} className="cursor-pointer hover:opacity-65">
-            <FaBagShopping title="shopping cart" size={24} />
+            <FaBagShopping title="shopping cart" size={26} />
           </Link>
 
           {user ? (
