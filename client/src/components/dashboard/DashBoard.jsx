@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 
 import Profile from '../../pages/Auth/Profile'
@@ -9,6 +9,7 @@ import Orders from '../../pages/orders/Orders'
 import MdDashboard from '../../pages/admin/MdDashboard'
 import Settings from '../../pages/admin/Settings'
 import Users from '../../pages/admin/Users'
+import { useSelector } from 'react-redux'
 
 
 
@@ -16,6 +17,20 @@ const DashBoard = () => {
   
     const [tab, setTab] = useState('')
     const location = useLocation()
+    const navigate = useNavigate()
+
+    const user = useSelector((state) => state.user?.currentUser);
+
+    const components = {
+      profile: Profile,
+      addproduct: AddProduct,
+      products: Products,
+      orders: Orders,
+      analytics: MdDashboard,
+      settings: Settings,
+      users: Users
+    }
+    const Component = components[tab] || MdDashboard
 
     useEffect(() => {
       const urlParams = new URLSearchParams(location.search)
@@ -28,24 +43,20 @@ const DashBoard = () => {
     
   return (
     <div className='flex gap-8 '>
-     <Sidebar />
+     {
+      user ? (
+        <>
+         <Sidebar />
 
-    <div className="flex   p-4">
-        {/* user */}
-         { tab === "profile" && <Profile/>}
-         
-
-         {/* Admin */}
-         { tab === "addproduct" && <AddProduct/>}
-         {tab === "products" && <Products/>}
-         {tab === 'users' && <Users /> }
-         {tab === 'products' && <Products/>}
-         { tab === 'orders' && <Orders/>}
-         {tab === 'analytics' && <MdDashboard/>}
-         {tab === 'settings' && <Settings/>}
-         
+    <div className='flex-1 p-4 '>
+       <Component />
        
     </div>
+        </>
+      ) : (
+        navigate('/signin')
+      )
+     }
     </div>
   )
 }

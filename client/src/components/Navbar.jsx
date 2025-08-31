@@ -59,7 +59,7 @@ const Navbar = () => {
             <div className="relative " ref={dropDownRef}>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="hover:opacity-65 transition-opacity focus:outline-none cursor-pointer"
+                className="pt-2 hover:opacity-65 transition-opacity focus:outline-none cursor-pointer"
                 aria-label="User menu"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
@@ -73,7 +73,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link to={"/signin"} className="cursor-pointer hover:opacity-65">
+            <Link to={"/signin"} className="text-xl cursor-pointer hover:opacity-65">
               <FaUser title="user profile" />
             </Link>
           )}
