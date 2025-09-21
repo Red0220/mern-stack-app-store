@@ -1,7 +1,6 @@
-import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import Input from "../../components/Input";
 
 
 
@@ -26,10 +25,30 @@ const AddProduct = () => {
 
   const user = useSelector((state) => state.user?.currentUser);
 
+  //state management
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    discount: 0,
+    stock: 0,
+    images: [],
+  })
+  const [files, setFiles] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(null);
+  const [discount, setDiscount] = useState(0);
+
   const baseInput =
   "p-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300 transition";
 
   console.log(user);
+  console.log(formData);
+
+  //functions
+  const handleChange = e => {
+    setFormData({...formData,[e.target.id]:e.target.value})
+  }
 
     
 
@@ -40,7 +59,7 @@ const AddProduct = () => {
       <h1 className="text-center text-2xl font-semibold text-slate-800 pb-8">
         Add a new product
       </h1>
-      <form className="space-y-10 w-full max-w-3xl mx-auto">
+      <form className="space-y-10 w-full max-w-3xl lg:max-w-6xl mx-auto">
         {/* general info */}
         <div className="p-6 rounded-2xl border border-gray-200 space-y-4">
           <h2 className="text-lg font-medium text-slate-800 pb-2 ">
@@ -49,15 +68,20 @@ const AddProduct = () => {
 
           <FormField label={'Product Name'}>
              <input type="text"
-               placeholder="Product Name"
-              className={`${baseInput} p-1.5 w-[70%] m-1`} />
+              id="title"
+              placeholder="Product Name"
+              className={`${baseInput} p-1.5 w-[70%] m-1`}
+              onChange={handleChange} />
           
           </FormField>
           <FormField label={'Description'}>
              <textarea
                 type="text"
+                id="description"
                 placeholder="description..."
                 className={`${baseInput} p-3 w-[70%] m-1`} 
+                rows={3}
+                onChange={handleChange}
               />
          
           </FormField>
@@ -68,35 +92,49 @@ const AddProduct = () => {
           <h1 className="text-lg font-medium text-slate-800 ">
            Price & Details
           </h1>
-           <div className="flex flex-col md:flex-row gap-6 text-xs">
+           <div className="flex flex-col flex-wrap md:flex-row gap-6 text-xs">
               <FormField label={'Price'} dir="row">
               <input 
                 type="number"
+                id="price"
                 placeholder="Price"
                 min={0}
-                className={`${baseInput}  `}
+                className={`${baseInput}`}
+                onChange={handleChange}
               />
           </FormField>
            <FormField label={'Discount (%)'} dir="row">
               <input 
               type='number'
-              className={`${baseInput} w-[3rem]`}/>
+              id="discount"
+              className={`${baseInput} w-[3rem]`}
+              onChange={handleChange}/>
            </FormField>
-               <FormField label={'Price'} dir="row">
+               <FormField label={'Total'} dir="row">
               <input 
                 type="number"
                 placeholder="Price"
-                min={0}
+                readOnly
                 className={`${baseInput} `}
               />
           </FormField>
+            <FormField label={'Stock'} dir="row">
+              <input 
+                type="number"
+                id="stock"
+                placeholder="Stock"
+                min={0}
+                className={`${baseInput} w-[4rem]`}
+                onChange={handleChange}
+              />
+            </FormField>
 
            </div>
         </div>
         {/* image upload */}
         <div className="p-6 rounded-2xl border border-gray-200 space-y-4">
           <h1 className="text-lg font-medium text-slate-800 pb-2 ">
-            Add a new product
+           Product images
           </h1>
          <label
         htmlFor="image"
