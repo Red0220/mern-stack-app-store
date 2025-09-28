@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 
-import Input from "../../components/Input"
 import { useNavigate } from 'react-router-dom'
 import { useDispatch} from 'react-redux'
 import { signinStart, signinFailure, signinSuccess } from '../../redux/userSlice/user.slice.js'
 import { useLoginMutation} from '../../redux/Api/auth.slice.js'
+import GoogleAuth from './GoogleAuth'
 
+import Input from "../../components/ui/Input"
+import Button from '../../components/ui/Button'
 
 
 const SignIn = () => {
@@ -74,15 +76,16 @@ const SignIn = () => {
           onChange={handleChange}
           />
          
-          <button disabled={isLoading}
+          <Button disabled={isLoading}
             type='submit'
-            className='w-[50%] sm:w-[60%] lg:w-76 text-slate-800 font-medium p-2.5 border border-gray-100 rounded-md shadow-md hover:opacity-50 focus:ring-2 focus:ring-gray-200  transition duration-200 cursor-pointer'>
+            >
            {
             isLoading ? 'logging...' : 'Log in'
            }    
-          </button>
+          </Button>
 
         </form>
+        <GoogleAuth />
         {error && <p className='text-red-500'>incorrect email or password</p>}
         <p className='text-gray-500'>Don't have an account? <span className='text-blue-500 cursor-pointer' onClick={() => navigate('/signup')}>Sign up</span></p>
       </div>

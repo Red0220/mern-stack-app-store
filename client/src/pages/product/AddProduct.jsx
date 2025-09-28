@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -34,20 +36,51 @@ const AddProduct = () => {
     stock: 0,
     images: [],
   })
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const [error, setError] = useState(null);
-  const [discount, setDiscount] = useState(0);
+  
+
+  const navigate = useNavigate();
+  const fileInputRef = useRef();
+
 
   const baseInput =
   "p-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300 transition";
 
   console.log(user);
+  console.log(files);
   console.log(formData);
+  console.log(uploadError);
 
   //functions
   const handleChange = e => {
     setFormData({...formData,[e.target.id]:e.target.value})
+  }
+
+
+  const handleUpload = ()=> {
+    const totalFiles = files.length + formData.images.length;
+
+    if(totalFiles === 0) return;
+    if(totalFiles < 7) {
+    
+      const imgs = files.map(file =>({
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file
+      }))
+      
+      setFormData((prev)=>({
+        ...prev,
+        images: [...prev.images, ...imgs]
+      }))
+      setFiles([]);
+
+    } else {
+      setError('You can upload maximum 6 images');
+    }
   }
 
     
@@ -132,7 +165,7 @@ const AddProduct = () => {
            </div>
         </div>
         {/* image upload */}
-        <div className="p-6 rounded-2xl border border-gray-200 space-y-4">
+        <div className={` p-6 rounded-2xl border border-gray-200 space-y-4 ${formData.images.length > 0 ? 'hidden' : '' }`}>
           <h1 className="text-lg font-medium text-slate-800 pb-2 ">
            Product images
           </h1>
@@ -162,14 +195,47 @@ const AddProduct = () => {
           <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
         </div>
         <input type='file' id="image"  accept='image/*' multiple 
-        onChange={(e)=>setFiles(e.target.files)}
+        onChange={(e)=>setFiles(Array.from(e.target.files))}
      hidden />
       </label>
+      { files && files.length > 0 && <button type="button"
+       className="p-2 font-medium w-full border border-gray-300 rounded-md cursor-pointer text-slate-800"
+      onClick={handleUpload} >
+        Upload
+        </button>}
         </div>
            
         {/* submit button */}
       </form>
+      { formData.images.length > 0 && (
+        <div className="w-full max-w-3xl lg:max-w-6xl mx-auto mt-6 p-4 border border-gray-200 rounded-2xl">
+          <h2 className="text-lg font-medium text-slate-800 pb-4 ">
+            Uploaded images ({formData.images.length} of 6)
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">      
+            {formData.images.map((img, i) => (
+              <div key={i} className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-200">
+                <img  src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                <button 
+                type="button"
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                onClick={()=> setFormData((prev)=>({
+                  ...prev,
+                  images: prev.images.filter((_, index) => index !== i)
+                }))}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+      )
+    }
     </div>
+    
   );
 };
 

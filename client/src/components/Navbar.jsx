@@ -9,7 +9,8 @@ import {
   signOutFailure,
   signOutSuccess,
 } from "../redux/userSlice/user.slice.js";
-import DropDown from "./DropDown";
+
+import DropDown from "./ui/DropDown";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.currentUser);
@@ -21,7 +22,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log("Current User:", user?.isAdmin);
+  console.log("Current User:", user);
 
   const handleLogout = async () => {
     try {

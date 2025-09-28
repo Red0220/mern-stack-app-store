@@ -11,7 +11,10 @@ import {
   getUserById,
   updateProfile,
   deleteUser,
+  signInGoogle
+
 } from "../controllers/auth.controller.js";
+
 
 const router = express.Router();
 
@@ -19,6 +22,7 @@ router.use(socketMiddleware);
 
 router.post("/sign-up", signUp);
 router.post("/sign-in", logging);
+router.post('/google', signInGoogle);
 
 //private routes
 router.route("/log-out").post(verifyToken, logout);

@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import Input from "../../components/Input"
 import { toast} from 'react-toastify'
 
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useSignUpMutation } from '../../redux/Api/auth.slice.js'
 import { signinStart, signinFailure, signOutSuccess, signinSuccess} from '../../redux/userSlice/user.slice.js'
+
+import Input from "../../components/ui/Input"
 
 const SignUp = () => {
   

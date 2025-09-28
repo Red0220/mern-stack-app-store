@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../middleware/errorHandler.js";
 import User from "../models/user.model.js";
 import { emitToAll, emitToUser } from "../services/socket.services.js";
+import { sendTokenResponse } from "../utilities/sendTokenRes.js";
 
 export const signUp = async (req, res, next) => {
   console.log("body \n", req.body);
@@ -310,3 +311,31 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const signInGoogle = async (req, res, next) => {
+    const {email} = req.body;
+    try {
+        const user = await User.findOne({ email})
+        
+        if(user){
+          sendTokenResponse(res, user, 200, "google_sign_in")
+        } else {
+          const username = req.body.name.toLowerCase().replace(/\s+/g, '') + Math.random().toString(36).slice(-4);
+          const avatar = req.body.googlePic
+          const genPass = Math.random().toString(36).slice(-8);
+          const hashPass = bcrypt.hashSync(genPass, 10);
+
+          const newUsser = new User({
+            username,
+            email,
+            password: hashPass,
+            avatar
+          })
+          await newUsser.save();
+          sendTokenResponse(res, newUsser, 201, "google_sign_up")
+        }
+    }catch (error) {
+      next(error)
+    }
+
+}
