@@ -1,24 +1,30 @@
 import { errorHandler } from "./errorHandler.js";
 
-const isValidString = (input) => typeof input === "string" && input.trim();
-const isValidNum = (val) => typeof val === "number" && !isNaN(val);
+const isValidString = (input) => typeof input === "string" && input.trim().length > 0;
+const isValidNum = (val) => {
+    const number = Number(val);
+    return !isNaN(number) && number >= 0;
+};
 
 export const validateProductInput = (req, res, next) => {
-    const { title, description, price, offer, discountPrice, stock, images } =
+    const { title, description, price, offer, discountPrice, stock } =
         req.body;
 
+     const numericFields = ['price', 'discountPrice', 'stock'];
+    numericFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+            req.body[field] = Number(req.body[field]);
+        }
+    });
     if (
         !isValidString(title) ||
         !isValidString(description) ||
         !isValidNum(price) ||
         price <= 0 ||
         (offer && typeof offer !== 'boolean') ||
-        (discountPrice && (!isValidNum(discountPrice) ||discountPrice <= 0)) ||
+        (discountPrice && (!isValidNum(discountPrice) )) ||
         !isValidNum(stock) ||
-        stock < 0 ||
-        !Array.isArray(images) ||
-        images.length === 0 ||
-        images.some((img) => !isValidString(img) || !img.startsWith("http"))
+        stock < 0  
     ) {
         return next(
             errorHandler(

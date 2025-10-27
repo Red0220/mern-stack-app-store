@@ -6,8 +6,14 @@ import { emitToAll } from "../services/socket.services.js";
 import mongoose from "mongoose";
 
 export const createProduct = async (req, res, next) => {
-  const { title, description, price, offer, discountPrice, stock, images } =
+
+  console.log("Request body:", req.files);
+  console.log(req.body);
+  const { title, description, price, offer, discountPrice, stock } =
     req.body;
+  const images = req.files.map((file) => `/uploads/${file.filename}`);
+
+  console.log("Uploaded images:", discountPrice);
 
   if (!req.user?.isAdmin) {
     return next(errorHandler(401, "You can not add a product!"));
@@ -33,7 +39,7 @@ export const createProduct = async (req, res, next) => {
       createdBy: req.user.username,
     });
     res.status(201).json({
-      succuss: true,
+      success: true,
       message: "Product created succussfully",
       product: p,
     });

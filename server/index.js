@@ -55,6 +55,7 @@ app.use((err, req, res, next) => {
     const message = err.message || 'Internal Server Error';
     res.status(statusCode).json({ message });
 });
+app.use('/uploads', express.static('uploads'));
 
 //socket connections
 io.on('connection', (socket)=> {
