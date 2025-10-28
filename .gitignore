@@ -27,6 +27,6 @@ dist-ssr
 .env.local
 .env.development.local
 *.firebase
-*.uploads
-*.Untitled-1.yaml
+*uploads
+*Untitled-1.yaml
 *.gitignore
