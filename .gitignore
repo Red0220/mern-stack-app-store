@@ -29,3 +29,4 @@ dist-ssr
 *.firebase
 *.uploads
 *.Untitled-1.yaml
+*.gitignore
