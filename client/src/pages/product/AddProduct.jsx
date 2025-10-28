@@ -113,6 +113,7 @@ const AddProduct = () => {
         {step === 1 ? (
           <ProductDetail
             formData={formData}
+            setFormData={setFormData}
             handleChange={handleChange}
             baseInput={BASE_INPUT_CLASS}
           />
