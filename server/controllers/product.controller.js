@@ -9,9 +9,9 @@ export const createProduct = async (req, res, next) => {
 
   console.log("Request body:", req.files);
   console.log(req.body);
-  const { title, description, price, offer, discountPrice, stock } =
+  const { title, description, price, offer, discountPrice, stock , images} =
     req.body;
-  const images = req.files.map((file) => `/uploads/${file.filename}`);
+  
 
   console.log("Uploaded images:", discountPrice);
 

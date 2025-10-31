@@ -56,7 +56,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
      if(formData.images.length < 2) return toast.error("Please upload at least 2 images for the product.", {
-      position: "top-center",
+      position: "bottom-center",
       autoClose: 2000,
       theme: "dark",
       
@@ -90,7 +90,9 @@ const AddProduct = () => {
        }
     } catch (error) {
       console.error("Error creating product:", error);
-       toast.error( error?.data?.message||'Failed to create product. Please try again.')
+       toast.error( error?.data?.message||'Failed to create product. Please try again.',{
+        position: "bottom-center",
+       })
     }
      
   }
@@ -158,7 +160,7 @@ const AddProduct = () => {
         {step === 2 && (
           <button disabled={isLoading}
           type="submit"
-          className="w-full lt-6 py-3 border border-black text-slate-800 font-semibold rounded-lg hover:bg-black hover:text-white transition-colors duration-300"
+          className="w-full lt-6 py-3 border border-black text-slate-800 font-semibold rounded-lg cursor-pointer hover:bg-black hover:text-white transition-colors duration-300"
         >
           {isLoading && (
             <span className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin "></span>
