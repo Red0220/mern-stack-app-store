@@ -27,12 +27,17 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const res = await logout().unwrap();
+    
 
       dispatch(signOutSuccess());
+
       navigate("/signin");
       toast.success(res.message);
+
       setIsOpen(false);
+
     } catch (error) {
+      
       console.error("Logout failed:", error);
 
       dispatch(signOutFailure(error));

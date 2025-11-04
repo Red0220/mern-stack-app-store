@@ -42,13 +42,13 @@ const DashBoard = () => {
     },[location.search])
     
   return (
-    <div className='flex gap-8 '>
+    <div className='flex gap-4'>
      {
       user ? (
         <>
          <Sidebar />
 
-    <div className='flex-1 p-4 '>
+    <div className='flex-1 p-4'>
        <Component />
        
     </div>

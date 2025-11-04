@@ -9,14 +9,12 @@ import rateLimit from 'express-rate-limit'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import path from 'path'
-import mongoose from 'mongoose'
+import { connectDb } from './config/connectDb.js'
 
 import userRouter from './routes/auth.router.js'
 import productRouter from './routes/product.router.js'
-import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+
 
 const app = express();
 const httpServer = createServer(app);
@@ -29,27 +27,30 @@ const io = new Server(httpServer, {
 
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:5173', // Adjust this to your client URL
+    origin: 'http://localhost:5173', 
+    // methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],// Adjust this to your client URL
     credentials: true
 }));
 app.use(cookieParser())
-app.use(helmet({}))
+app.use(helmet())
 app.use('/server', rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 50,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use('/uploads', (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'cross-origin');
+app.use('/uploads',helmet.crossOriginResourcePolicy({
+    policy: "cross-origin"
+}),
+ (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
     next();
 },
     express.static(path.join(process.cwd(), 'uploads')));
 
-mongoose.connect(process.env.MongooseUrl)
-    .then(() => console.log('connected...'))
-    .catch((e) => console.log(e || 'something went wrong'))
-
+// MongoDB connection
+connectDb()
 // routers 
 app.use('/server/auth', userRouter);
 app.use('/server/product', productRouter);
