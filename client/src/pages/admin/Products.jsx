@@ -5,7 +5,7 @@ import { useGetProductsQuery } from '../../redux/Api/product.slice.js';
 import IsLoading from '../../components/ui/IsLoading.jsx';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { FiSearch } from 'react-icons/fi'
-
+import { MdDelete, MdEdit } from "react-icons/md";
 import { formatPrice} from "../../util/formatPrice.js"
 const PAGE_SIZE = 10;
 const Products = () => {
@@ -14,7 +14,7 @@ const Products = () => {
   const products = data?.products || []
 
   const [query, setQuery] = useState('');
-  const [sortBy, setSortBy] = useState('title');
+  const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(1);
   const [action, setAction] = useState(false)
@@ -35,10 +35,12 @@ const Products = () => {
     list.sort((a,b) => {
       const aVal = sortBy === "price" ? Number(a.price || 0)
           : sortBy === "stock" ? Number(a.stock || 0)
-          :String(a.title || "").toLowerCase();
+          : sortBy === 'createdAt' ? Number(a.createdAt ||0)
+          : String(a.title || "").toLowerCase()
       const bVal = sortBy === "price" ? Number(b.price || 0)
           : sortBy === "stock" ? Number(b.stock || 0)
-          :String(b.title || "").toLowerCase();
+          : sortBy === 'createdAt' ? Number(b.createdAt ||0) 
+          : String(b.title || "").toLowerCase()
 
           if(aVal < bVal) return sortOrder === "asc" ? -1 : 1;
           if(aVal > bVal) return sortOrder === "asc" ? 1 : -1;
@@ -102,7 +104,7 @@ console.log('page items', pageItems)
           className='w-full bg-transparent outline-none text-sm px-2'
           />
         </div>
-        <div className="flex itmes-center gap-2">
+        <div className="flex items-center gap-2">
           <label className='text-sm text-gray-600'>Sort:</label>
           <select 
           value={sortBy}
@@ -124,7 +126,7 @@ console.log('page items', pageItems)
         </div>
       </div>
 
-      <div className="overflow-x-auto overflow-y-visible bg-white border border-gra-200 rounded-md shadow-sm">
+      <div className=" bg-white border border-gray-400 rounded-md shadow-sm">
          <table className="min-w-full divide-y divide-gray-200 z-0">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
@@ -165,7 +167,7 @@ console.log('page items', pageItems)
                 <td className='px-4 py-3'>
                   {
                     p.offer ? (
-                      <span className="bg-gren-100 text-green-800 px-2 py-0 5 rounded text-sm">
+                      <span className="bg-green-100 text-green-800 px-2 py-0 5 rounded text-sm">
                         Yes
                       </span>
                     ) : (
@@ -190,12 +192,19 @@ console.log('page items', pageItems)
                   </button>
                   {
                     action == p._id && (
-                      <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-100 shodaw-sm cursor-pointer z-20"
+                      <div className="absolute right-0 mt-2 w-36 font-semibold text-sm bg-white border border-gray-200 shodaw-sm cursor-pointer z-[9999] "
                       id={`action-${p._id}`}
                       role='action'
                       >
-                        <button role='actionitem' className='w-full text-left px-3 py-2 hover:bg-gray-50 text-sm' >Edit</button>
-                        <button role='actionitem' className='w-full text-left px-3 py-2 hover:bg-gray-50 text-sm' >Delete</button>
+                        <button role='actionitem' className='flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'>
+                          <MdEdit size={20} color='gray'/>
+                          <span>Update</span>
+                          </button>
+                        <button role='actionitem' className='flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm' >
+                          <MdDelete color='red' size={20} />
+                          <span>Delete </span>
+                          
+                          </button>
                       </div>
                     )
                   }
