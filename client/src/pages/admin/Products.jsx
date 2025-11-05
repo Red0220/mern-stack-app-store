@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useMemo, useState, useCallback } from 'react';
 import { useGetProductsQuery } from '../../redux/Api/product.slice.js';
 import IsLoading from '../../components/ui/IsLoading.jsx';
@@ -7,20 +7,37 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { FiSearch } from 'react-icons/fi'
 import { MdDelete, MdEdit } from "react-icons/md";
 import { formatPrice} from "../../util/formatPrice.js"
+
 const PAGE_SIZE = 10;
-const Products = () => {
+ //STYLES **
+ const BUTTON_STYLE = 'px-3 py-1 border border-gray-100 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
+const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'
+
+
+ const Products = () => {
 
   const { data, error, isLoading } = useGetProductsQuery()
   const products = data?.products || []
 
   const [query, setQuery] = useState('');
+  const [debounceQuery, setDebounceQuery] = useState('')
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(1);
-  const [action, setAction] = useState(false)
+  const [action, setAction] = useState(null)
+  
+  //debounce search input 
+   useEffect(()=> {
+    const handler = setTimeout(() => {
+      setDebounceQuery(query)
+      setPage(1)
+    }, 300);
+    return ()=> clearTimeout(handler)
+   }, [query])
 
   const filtered = useMemo(()=> {
-    let q = query.toLowerCase();
+
+    let q = debounceQuery.toLowerCase();
     let list = products.slice()
 
     if(q){
@@ -35,11 +52,11 @@ const Products = () => {
     list.sort((a,b) => {
       const aVal = sortBy === "price" ? Number(a.price || 0)
           : sortBy === "stock" ? Number(a.stock || 0)
-          : sortBy === 'createdAt' ? Number(a.createdAt ||0)
+          : sortBy === 'createdAt' ? new Date(a.createdAt ||0).getTime()
           : String(a.title || "").toLowerCase()
       const bVal = sortBy === "price" ? Number(b.price || 0)
           : sortBy === "stock" ? Number(b.stock || 0)
-          : sortBy === 'createdAt' ? Number(b.createdAt ||0) 
+          : sortBy === 'createdAt' ? new Date(b.createdAt ||0).getTime()
           : String(b.title || "").toLowerCase()
 
           if(aVal < bVal) return sortOrder === "asc" ? -1 : 1;
@@ -52,8 +69,8 @@ const Products = () => {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
   const pageItems = useMemo(()=> {
-    const start = (page - 1) * PAGE_SIZE
-    return filtered.slice(start, start + PAGE_SIZE)
+    const startIndex = (page - 1) * PAGE_SIZE
+    return filtered.slice(startIndex, startIndex + PAGE_SIZE)
   }, [filtered, page])
 
   const handleToggleMenu = useCallback(id => {
@@ -67,6 +84,7 @@ const Products = () => {
       setSortBy(f)
       setSortOrder('asc')
     }
+    setPage(1)
   }
 
    if (isLoading) return <IsLoading arg={isLoading} />;
@@ -86,11 +104,21 @@ const Products = () => {
       </div>
     );
   }
+
+  useEffect(()=> {
+    const handleClickOutSide = e => {
+      if(action && !e.target.closest('.action-menu')){
+        setAction(null)
+      }
+    }
+    document.addEventListener('click', handleClickOutSide)
+    return ()=> document.removeEventListener('click', handleClickOutSide)
+  },[action])
 // log
 console.log('page items', pageItems)
   return (
-    <div className='p-4'>
-      <h1 className="text-3xl font-bold mb-4 text-center text-slate-800">Products</h1>
+    <div className='p-4 w-full'>
+      <h1 className="text-3xl font-bold mb-4 text-center text-slate-800">Products Management</h1>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div className="flex items-center gap-2 bg-white border rounded-md px-3 py-1 shadow-sm maw-w-mid ww-full sm:w-auto">
@@ -141,7 +169,7 @@ console.log('page items', pageItems)
 
           <tbody className="bg-white divide-y divide-gray-100">
             {pageItems && pageItems.map(p => (
-              <>
+              
               <tr key={p._id} className='hover:bg-gray-50 transition-colors'>
                 <td className='px-4 py-3'>
                   <div className="flex items-center gap-3">
@@ -182,25 +210,28 @@ console.log('page items', pageItems)
                 <td className="px-4 py-3 text-sm text-gray-700">{p.rating ?? '_' }</td>
 
                 <td className="px-4 py-3 relative">
-                  <button 
+                   <div className="action-menu">
+                         <button 
                   aria-expanded={action === p._id}
-                  aria-controls={`acion-${p._id}`}
+                  aria-controls={`acion-menu-${p._id}`}
                   className='text-gray-600 hover:text-gray-800 cursor-pointer'
                   onClick={()=> handleToggleMenu(p._id)}
                   >
                    <HiOutlineDotsHorizontal size={20} />
                   </button>
+                   </div>
                   {
                     action == p._id && (
-                      <div className="absolute right-0 mt-2 w-36 font-semibold text-sm bg-white border border-gray-200 shodaw-sm cursor-pointer z-[9999] "
-                      id={`action-${p._id}`}
-                      role='action'
+                      <div className="absolute top-8 right-0 mt-2 w-36 font-semibold text-sm bg-white border border-gray-200 rounded shadow-sm cursor-pointer z-[9999] "
+                      id={`action-menu-${p._id}`}
+                      role='menu'
+                      aria-label='Product actions'
                       >
-                        <button role='actionitem' className='flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'>
+                        <button role='actionitem' className={BTN_STYLE}>
                           <MdEdit size={20} color='gray'/>
                           <span>Update</span>
                           </button>
-                        <button role='actionitem' className='flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm' >
+                        <button role='actionitem' className={BTN_STYLE} >
                           <MdDelete color='red' size={20} />
                           <span>Delete </span>
                           
@@ -210,14 +241,14 @@ console.log('page items', pageItems)
                   }
                 </td>
               </tr>
-              </>
+              
             ))}
           </tbody>
           </table>
       </div>
 
       {/* pagination */}
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 flex items-center justify-between flex-wrap gap-4">
         <div className="text-sm text-gray-600">
           Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
         </div>
@@ -226,14 +257,14 @@ console.log('page items', pageItems)
           <button 
           onClick={()=> setPage(p => Math.max(1, p - 1))}
           disabled={page === 1}
-          className='px-3 py-1 border border-gray-100 disabled:opacity-50'>
+          className={BUTTON_STYLE}>
             prev
           </button>
           <div className="px-3 py-1 border border-gray-100 bg-gray-50 text-sm">{page} / {totalPages}</div>
           <button 
           onClick={()=> setPage(p => Math.min(totalPages, p + 1))}
           disabled={page === totalPages}
-          className='px-3 py-1 border border-gray-100 rounded disabled:opacity-50'>
+          className={BUTTON_STYLE}>
             Next
           </button>
         </div>
