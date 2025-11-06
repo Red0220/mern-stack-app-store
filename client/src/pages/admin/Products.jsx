@@ -1,19 +1,22 @@
 
-import React, { useEffect } from 'react'
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect  } from 'react';
 import { useGetProductsQuery } from '../../redux/Api/product.slice.js';
-import IsLoading from '../../components/ui/IsLoading.jsx';
+import { Link } from 'react-router-dom'
+
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { FiSearch } from 'react-icons/fi'
-import { MdDelete, MdEdit } from "react-icons/md";
+import { FiSearch } from 'react-icons/fi';
+import { MdDelete, MdEdit } from 'react-icons/md';
+
+
+import IsLoading from '../../components/ui/IsLoading.jsx';
 import { formatPrice} from "../../util/formatPrice.js"
 
 const PAGE_SIZE = 10;
  //STYLES **
- const BUTTON_STYLE = 'px-3 py-1 border border-gray-100 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
+const BUTTON_STYLE = 'px-3 py-1 border border-gray-100 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
 const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'
 
-
+const interFace = []
  const Products = () => {
 
   const { data, error, isLoading } = useGetProductsQuery()
@@ -38,7 +41,13 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
   const filtered = useMemo(()=> {
 
     let q = debounceQuery.toLowerCase();
-    let list = products.slice()
+    let list = [...products];
+    
+    const compare = (item, key)=> {
+      if(key === 'price' || key === 'stock') return Number(item[key] ||0);
+      if( key === 'createdAt') return new Date(item.createdAt || 0).getTime()
+        return String(item.title || '').toLocaleLowerCase()
+    }
 
     if(q){
       list= list.filter(p => {
@@ -50,21 +59,14 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
     }
 
     list.sort((a,b) => {
-      const aVal = sortBy === "price" ? Number(a.price || 0)
-          : sortBy === "stock" ? Number(a.stock || 0)
-          : sortBy === 'createdAt' ? new Date(a.createdAt ||0).getTime()
-          : String(a.title || "").toLowerCase()
-      const bVal = sortBy === "price" ? Number(b.price || 0)
-          : sortBy === "stock" ? Number(b.stock || 0)
-          : sortBy === 'createdAt' ? new Date(b.createdAt ||0).getTime()
-          : String(b.title || "").toLowerCase()
-
+          const aVal = compare(a, sortBy);
+          const bVal = compare(b, sortBy)
           if(aVal < bVal) return sortOrder === "asc" ? -1 : 1;
           if(aVal > bVal) return sortOrder === "asc" ? 1 : -1;
           return 0;
     })
     return list;
-  },[products, query, sortBy, sortOrder]);
+  },[products, debounceQuery, sortBy, sortOrder]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
@@ -91,7 +93,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 
   if (error) {
     return (
-      <div className="text-center font-bold text-2xl text-red-600">
+      <div className="text-center font-semibold text-2xl text-red-600">
         {error?.data?.message || 'Error loading products.'}
       </div>
     );
@@ -104,7 +106,8 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
       </div>
     );
   }
-
+ 
+  // close menu on outside click or Esc
   useEffect(()=> {
     const handleClickOutSide = e => {
       if(action && !e.target.closest('.action-menu')){
@@ -118,10 +121,10 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 console.log('page items', pageItems)
   return (
     <div className='p-4 w-full'>
-      <h1 className="text-3xl font-bold mb-4 text-center text-slate-800">Products Management</h1>
+      <h1 className="text-3xl font-semibold mb-4 text-center text-slate-800">Products Management</h1>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 bg-white border rounded-md px-3 py-1 shadow-sm maw-w-mid ww-full sm:w-auto">
+        <div className="flex items-center gap-2 bg-white border rounded-md px-3 py-1 shadow-sm max-w-mid w-full sm:w-auto">
           <FiSearch className='text-gray-500' />
 
           <input 
@@ -133,13 +136,14 @@ console.log('page items', pageItems)
           />
         </div>
         <div className="flex items-center gap-2">
-          <label className='text-sm text-gray-600'>Sort:</label>
+          <label className='text-sm text-gray-600'>Filter: </label>
           <select 
           value={sortBy}
           onChange={(e)=> setSortBy(e.target.value)}
           className='border rounded px-2 py-1 text-sm'
           aria-label='Sort products'
           >
+            <option value='time'>Time</option>
             <option value='title'>Title</option>
             <option value='price'>Price</option>
             <option value='stock'>Stock</option>
@@ -172,6 +176,7 @@ console.log('page items', pageItems)
               
               <tr key={p._id} className='hover:bg-gray-50 transition-colors'>
                 <td className='px-4 py-3'>
+                <Link to={`/product-details/${p._id}`}  className=''>
                   <div className="flex items-center gap-3">
                     <img 
                     src={p.images[0]}
@@ -181,16 +186,17 @@ console.log('page items', pageItems)
                     height={48}
                     onError={e => {e.currentTarget.src = 'some'}}
                     className='w-12 h-12 object-cover rounded'
-                     />
-                     <div className="min-w-0">
-                      <div className="font-medium trucate">
+                    />
+                     <div className="min-w-0 truncate text-ellipsis">
+                      <div className="font-medium ">
                         {p.title ||"Untitled product"}
                       </div>
-                      <div className="text-xs text-gray-500 truncate">
+                      <div className="text-xs text-gray-500 ">
                         {p.description || ""}
                       </div>
                      </div>
                   </div>
+                    </Link>
                 </td>
                 <td className='px-4 py-3'>
                   {
@@ -199,7 +205,7 @@ console.log('page items', pageItems)
                         Yes
                       </span>
                     ) : (
-                      <span className="text-gray-700 px-2 py-0 5 rounded text-sm">
+                      <span className="text-gray-700 px-2 py-0.5 rounded text-sm">
                         No
                       </span>
                     )
@@ -208,7 +214,7 @@ console.log('page items', pageItems)
                 <td className="px-4 py-3 text-sm text-gray-700">{formatPrice(p.price)}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{p.stock ?? 0}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{p.rating ?? '_' }</td>
-
+                   {/* action part */}
                 <td className="px-4 py-3 relative">
                    <div className="action-menu">
                          <button 

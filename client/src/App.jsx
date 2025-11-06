@@ -14,6 +14,7 @@ import UserForbidden from "./util/UserForbidden";
 import AdminRoute from './util/AdminRoute'
 import AddProduct from "./pages/product/AddProduct"
 import DashBoard from "./components/dashboard/DashBoard";
+import ProductPage from "./pages/admin/ProductPage";
 
 const App = () => {
   return (
@@ -31,7 +32,7 @@ const App = () => {
         </Route>
         {/* Dashboard */}
         <Route path="/dashboard" element={<DashBoard />} />
-         
+         <Route path='/product-details/:id' element={<ProductPage/>} />
          {/* Admin */}
          <Route element={<AdminRoute />}>
          <Route path="addproduct" element={<AddProduct/>}/>
