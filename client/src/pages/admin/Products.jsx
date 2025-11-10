@@ -143,7 +143,7 @@ console.log('page items', pageItems)
           className='border rounded px-2 py-1 text-sm'
           aria-label='Sort products'
           >
-            <option value='time'>Time</option>
+            <option value='createdAt'>Created At</option>
             <option value='title'>Title</option>
             <option value='price'>Price</option>
             <option value='stock'>Stock</option>
@@ -158,21 +158,21 @@ console.log('page items', pageItems)
         </div>
       </div>
 
-      <div className=" bg-white border border-gray-400 rounded-md shadow-sm">
+      <div className="overflow-x-auto bg-white border border-gray-400 rounded-md shadow-sm">
          <table className="min-w-full divide-y divide-gray-200 z-0">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Offer</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" onClick={() => handleSort('price')}>Price</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer" onClick={() => handleSort('stock')}>Stock</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
+              {
+                ["Product", "Offer", "Price", "Stock", "Rating", "Actions"].map((th, i) =>(
+                  
+                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{th}</th>
+                ))
+              }
+          </tr>
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-100">
-            {pageItems && pageItems.map(p => (
+            {pageItems.map(p => (
               
               <tr key={p._id} className='hover:bg-gray-50 transition-colors'>
                 <td className='px-4 py-3'>
@@ -184,7 +184,7 @@ console.log('page items', pageItems)
                     loading='lazy'
                     width={48}
                     height={48}
-                    onError={e => {e.currentTarget.src = 'some'}}
+                    onError={e => {e.currentTarget.src = 'https://via.placeholder.com/48?text=?';}}
                     className='w-12 h-12 object-cover rounded'
                     />
                      <div className="min-w-0 truncate text-ellipsis">
@@ -201,7 +201,7 @@ console.log('page items', pageItems)
                 <td className='px-4 py-3'>
                   {
                     p.offer ? (
-                      <span className="bg-green-100 text-green-800 px-2 py-0 5 rounded text-sm">
+                      <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-sm">
                         Yes
                       </span>
                     ) : (
@@ -217,9 +217,9 @@ console.log('page items', pageItems)
                    {/* action part */}
                 <td className="px-4 py-3 relative">
                    <div className="action-menu">
-                         <button 
+                  <button 
                   aria-expanded={action === p._id}
-                  aria-controls={`acion-menu-${p._id}`}
+                  aria-controls={`action-menu-${p._id}`}
                   className='text-gray-600 hover:text-gray-800 cursor-pointer'
                   onClick={()=> handleToggleMenu(p._id)}
                   >
