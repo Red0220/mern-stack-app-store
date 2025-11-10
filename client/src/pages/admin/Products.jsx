@@ -16,7 +16,7 @@ const PAGE_SIZE = 10;
 const BUTTON_STYLE = 'px-3 py-1 border border-gray-100 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
 const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'
 
-const interFace = []
+
  const Products = () => {
 
   const { data, error, isLoading } = useGetProductsQuery()
@@ -165,7 +165,7 @@ console.log('page items', pageItems)
               {
                 ["Product", "Offer", "Price", "Stock", "Rating", "Actions"].map((th, i) =>(
                   
-                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{th}</th>
+                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase" key={i}>{th}</th>
                 ))
               }
           </tr>

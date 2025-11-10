@@ -1,48 +1,55 @@
-import React from "react";
+import  { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import Layout from "./pages/Layout";
-import Navbar from "./components/Navbar";
-import SignUp from "./pages/Auth/SignUp";
-import SignIn from "./pages/Auth/SignIn";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import Navbar from "./components/Navbar";
+
 import Footer from "./pages/Footer";
 
 import UserForbidden from "./util/UserForbidden";
 import AdminRoute from './util/AdminRoute'
-import AddProduct from "./pages/product/AddProduct"
-import DashBoard from "./components/dashboard/DashBoard";
-import ProductPage from "./pages/admin/ProductPage";
+import ErrorBoundary from "./util/ErrorBoundary";
+
+const Layout = lazy(() => import("./pages/Layout"));
+const SignUp = lazy(() => import("./pages/Auth/SignUp"));
+const SignIn = lazy(() => import("./pages/Auth/SignIn"));
+const AddProduct = lazy(() => import("./pages/product/AddProduct"));
+const DashBoard = lazy(() => import("./components/dashboard/DashBoard"));
+const ProductPage = lazy(() => import("./pages/admin/ProductPage"));
 
 const App = () => {
   return (
     <BrowserRouter>
       <ToastContainer />
-      <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-         <Routes>
-        <Route path="/" element={<Layout />} />
-        {/* User */}
-        <Route element={<UserForbidden />}>
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn />} />
-        </Route>
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<DashBoard />} />
-         <Route path='/product-details/:id' element={<ProductPage/>} />
-         {/* Admin */}
-         <Route element={<AdminRoute />}>
-         <Route path="addproduct" element={<AddProduct/>}/>
-         
-         </Route>
+      <ErrorBoundary>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-1">
+            <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
 
-      </Routes>
-      </main>
-      <Footer />
-      </div>
+              <Routes>
+                <Route path="/" element={<Layout />} />
+                {/* User */}
+                <Route element={<UserForbidden />}>
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/signin" element={<SignIn />} />
+                </Route>
+                {/* Dashboard */}
+                <Route path="/dashboard" element={<DashBoard />} />
+                <Route path='/product-details/:id' element={<ProductPage />} />
+                {/* Admin */}
+                <Route element={<AdminRoute />}>
+                  <Route path="addproduct" element={<AddProduct />} />
+
+                </Route>
+
+              </Routes>
+            </Suspense>
+          </main>
+          <Footer />
+        </div>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };
