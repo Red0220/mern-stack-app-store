@@ -7,6 +7,7 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { FiSearch } from 'react-icons/fi';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
+import DeleteButton from '../../components/DeleteProduct.jsx';
 
 import IsLoading from '../../components/ui/IsLoading.jsx';
 import { formatPrice} from "../../util/formatPrice.js"
@@ -19,7 +20,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 
  const Products = () => {
 
-  const { data, error, isLoading } = useGetProductsQuery()
+  const { data, error, isLoading, refetch } = useGetProductsQuery()
   const products = data?.products || []
 
   const [query, setQuery] = useState('');
@@ -228,7 +229,7 @@ console.log('page items', pageItems)
                    </div>
                   {
                     action == p._id && (
-                      <div className="absolute top-8 right-0 mt-2 w-36 font-semibold text-sm bg-white border border-gray-200 rounded shadow-sm cursor-pointer z-[9999] "
+                      <div className="absolute top-8 right-0 mt-2 w-36 font-semibold text-sm bg-white border border-gray-200 rounded shadow-sm z-[9999] "
                       id={`action-menu-${p._id}`}
                       role='menu'
                       aria-label='Product actions'
@@ -237,11 +238,7 @@ console.log('page items', pageItems)
                           <MdEdit size={20} color='gray'/>
                           <span>Update</span>
                           </button>
-                        <button role='actionitem' className={BTN_STYLE} >
-                          <MdDelete color='red' size={20} />
-                          <span>Delete </span>
-                          
-                          </button>
+                         <DeleteButton id={p._id} onSuccess={refetch} entityName='product' />
                       </div>
                     )
                   }
