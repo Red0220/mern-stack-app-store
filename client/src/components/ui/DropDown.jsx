@@ -1,15 +1,16 @@
-import { useRef, useState} from "react";
+import {  useRef} from "react";
 import { Link } from "react-router-dom";
 import { useClickOutside  } from "../../hooks/useClickOutside";
 import { roleOptions } from "../../data/userRoles";
 import { createPortal } from "react-dom";
 
 
+const TOP_Z = 2147483647
 
-const DropDown = ({ userRole, onOpen, onLogout, onSelect, triggerRef }) => {
+const DropDown = ({ userRole, onOpen, onLogout, onSelect }) => {
   const dropDownRef = useRef(null);
-   useClickOutside(dropDownRef,()=> onOpen(false));
-
+  useClickOutside(dropDownRef,()=> onOpen(false));
+  
   const handleSelect = (option) => {
     if (option.label === "Logout") {
       onLogout();
@@ -22,8 +23,16 @@ const DropDown = ({ userRole, onOpen, onLogout, onSelect, triggerRef }) => {
 
 
   return createPortal(
-    <div
-      className="fixed top-20 right-0  w-48 shadow-lg rounded-md z-[9999]  transition-all duration-200 ease-out"
+    <div 
+    style={{
+      position: 'fixed',
+      top: "5rem",
+      right: "0",
+      zIndex: TOP_Z,
+      visibility:"visible",
+      minWidth: 192,
+    }}
+      className="shadow-lg rounded-md bg-white"
       ref={dropDownRef}
       role="menu"
       aria-orientation="vertical"

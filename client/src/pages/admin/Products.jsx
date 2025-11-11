@@ -122,7 +122,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 // log
 console.log('page items', pageItems)
   return (
-    <div className='p-4 w-full z-1'>
+    <div className='p-3 sm:p-4 lg:p-6'>
       <h1 className="text-3xl font-semibold mb-4 text-center text-slate-800">Products Management</h1>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
@@ -160,8 +160,8 @@ console.log('page items', pageItems)
         </div>
       </div>
 
-      <div className="overflow bg-white border border-gray-400 rounded-md shadow-sm">
-         <table className="min-w-full divide-y divide-gray-200 z-0">
+      <div className="hidden sm:block  bg-white border border-gray-400 rounded-md shadow-sm">
+         <table className="min-w-full divide-y divide-gray-200 ">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
               {
