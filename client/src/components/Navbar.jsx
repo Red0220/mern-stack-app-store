@@ -62,7 +62,7 @@ const Navbar = () => {
           </Link>
 
           {user ? (
-            <div className="relative " ref={dropDownRef}>
+            <div className="relative z-0 " ref={dropDownRef}>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="pt-2 hover:opacity-65 transition-opacity focus:outline-none cursor-pointer"
@@ -85,6 +85,7 @@ const Navbar = () => {
           )}
           {isOpen && (
             <DropDown
+              triggerRef={dropDownRef}
               userRole={user?.isAdmin ? "admin" : "user"}
               onOpen={setIsOpen}
               onLogout={handleLogout}

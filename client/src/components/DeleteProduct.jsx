@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from 'react-dom'
 import { toast } from "react-toastify";
 
 import { useDeleteProductMutation } from "../redux/Api/product.slice";
@@ -35,15 +36,18 @@ const DeleteButton = ({ id, onSuccess, entityName = "item" }) => {
         }
     };
     return (
-        <div>
+        <div className="">
             <button
                 role="button"
                 aria-label={`Delete ${entityName}`}
-                className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md transition-colors ${isLoading
+                className={`w-full flex items-center gap-2 text-sm px-3 py-2 rounded-md transition-colors ${isLoading
                         ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-500"
                         : "text-red-700 hover:bg-red-50"
                     }`}
-                onClick={()=> setShowModal(true)}
+                onClick={(e)=> {
+                    e.stopPropagation();
+                    setShowModal(true);
+                }}
                 disabled={isLoading}
             >
                 <MdDelete size={20} />
@@ -51,18 +55,18 @@ const DeleteButton = ({ id, onSuccess, entityName = "item" }) => {
             </button>
 
             {
-                showModal && (
+                showModal && createPortal (
                     <div className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-sm flex items-center justify-center">
 
                         <div className="bg-white p-6 rounded-2xl shadow-lg w-[90%] max-w-sm animate">
-                            <h2 className="text-lg fon-semibold text-gray-800 mb-2">
+                            <h2 className="text-lg text-center fon-semibold text-gray-800 mb-4">
                                 Confirm Deletion
                             </h2>
                             <p className="text-sm text-gray-600 mb-5">
-                                Are you sure you want to delete this
+                                Are you sure you want to delete this {" "}
                                 <span className="font-medium">
                                     {name}
-                                </span>?
+                                </span> ?
                                 this action cannot be undone
                             </p>
                             <div className="flex justify-end gap-3">
@@ -88,7 +92,8 @@ const DeleteButton = ({ id, onSuccess, entityName = "item" }) => {
 
                             </div>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )
             }
 

@@ -42,7 +42,7 @@ const DashBoard = () => {
     },[location.search])
     
   return (
-    <div className='flex gap-4'>
+    <div className='flex gap-4 z-0'>
      {
       user ? (
         <>

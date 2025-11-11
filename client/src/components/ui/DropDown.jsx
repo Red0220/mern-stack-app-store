@@ -1,34 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState} from "react";
 import { Link } from "react-router-dom";
-
+import { useClickOutside  } from "../../hooks/useClickOutside";
 import { roleOptions } from "../../data/userRoles";
+import { createPortal } from "react-dom";
 
 
 
-const DropDown = ({ userRole, onOpen, onLogout, onSelect }) => {
+const DropDown = ({ userRole, onOpen, onLogout, onSelect, triggerRef }) => {
   const dropDownRef = useRef(null);
-
-  
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
-        onOpen(false);
-      }
-    };
-
-    const handleEscape = (e) => {
-      if(e.key === 'Escape') {
-        onOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [onOpen]);
+   useClickOutside(dropDownRef,()=> onOpen(false));
 
   const handleSelect = (option) => {
     if (option.label === "Logout") {
@@ -41,9 +21,9 @@ const DropDown = ({ userRole, onOpen, onLogout, onSelect }) => {
   const options = roleOptions[userRole] || [];
 
 
-  return (
+  return createPortal(
     <div
-      className="absolute right-0 top-20 w-48 shadow-lg rounded-md z-50 transform transition-all duration-200 ease-out origin-top-right"
+      className="fixed top-20 right-0  w-48 shadow-lg rounded-md z-[9999]  transition-all duration-200 ease-out"
       ref={dropDownRef}
       role="menu"
       aria-orientation="vertical"
@@ -76,7 +56,9 @@ const DropDown = ({ userRole, onOpen, onLogout, onSelect }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </div>,
+
+    document.body
   );
 };
 

@@ -38,6 +38,16 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
     }, 300);
     return ()=> clearTimeout(handler)
    }, [query])
+   // close menu on outside click or Esc
+  useEffect(()=> {
+    const handleClickOutSide = e => {
+      if(action && !e.target.closest('.action-menu')){
+        setAction(null)
+      }
+    }
+    document.addEventListener('click', handleClickOutSide)
+    return ()=> document.removeEventListener('click', handleClickOutSide)
+  },[action])
 
   const filtered = useMemo(()=> {
 
@@ -107,21 +117,12 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
       </div>
     );
   }
- 
-  // close menu on outside click or Esc
-  useEffect(()=> {
-    const handleClickOutSide = e => {
-      if(action && !e.target.closest('.action-menu')){
-        setAction(null)
-      }
-    }
-    document.addEventListener('click', handleClickOutSide)
-    return ()=> document.removeEventListener('click', handleClickOutSide)
-  },[action])
+  
+  
 // log
 console.log('page items', pageItems)
   return (
-    <div className='p-4 w-full'>
+    <div className='p-4 w-full z-1'>
       <h1 className="text-3xl font-semibold mb-4 text-center text-slate-800">Products Management</h1>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
@@ -159,7 +160,7 @@ console.log('page items', pageItems)
         </div>
       </div>
 
-      <div className="overflow-x-auto bg-white border border-gray-400 rounded-md shadow-sm">
+      <div className="overflow bg-white border border-gray-400 rounded-md shadow-sm">
          <table className="min-w-full divide-y divide-gray-200 z-0">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
@@ -238,7 +239,8 @@ console.log('page items', pageItems)
                           <MdEdit size={20} color='gray'/>
                           <span>Update</span>
                           </button>
-                         <DeleteButton id={p._id} onSuccess={refetch} entityName='product' />
+                          
+                          <DeleteButton id={p._id} onSuccess={refetch} entityName='product' />
                       </div>
                     )
                   }
