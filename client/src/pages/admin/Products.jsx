@@ -160,7 +160,7 @@ console.log('page items', pageItems)
         </div>
       </div>
 
-      <div className="hidden sm:block  bg-white border border-gray-400 rounded-md shadow-sm">
+      <div className=" sm:block  bg-white border border-gray-400 rounded-md shadow-sm">
          <table className="min-w-full divide-y divide-gray-200 ">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
@@ -189,12 +189,12 @@ console.log('page items', pageItems)
                     onError={e => {e.currentTarget.src = 'https://via.placeholder.com/48?text=?';}}
                     className='w-12 h-12 object-cover rounded'
                     />
-                     <div className="min-w-0 truncate text-ellipsis">
-                      <div className="font-medium ">
+                     <div className="min-w-0 line-clamp-1">
+                      <div className="font-medium text-sm">
                         {p.title ||"Untitled product"}
                       </div>
                       <div className="text-xs text-gray-500 ">
-                        {p.description || ""}
+                        {p.description ||''}
                       </div>
                      </div>
                   </div>
