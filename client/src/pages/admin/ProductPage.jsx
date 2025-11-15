@@ -1,14 +1,20 @@
+import { useEffect, useState } from 'react'
 import { useParams} from 'react-router-dom'
+
+
 import { useGetProductByIdQuery } from '../../redux/Api/product.slice.js'
 import IsLoading from '../../components/ui/IsLoading.jsx'
-import { useEffect, useState } from 'react'
 import ShowMore from '../../components/ui/ShowMore.jsx'
+import { formatPrice } from '../../util/formatPrice.js'
+
+import Input from '../../components/ui/Input.jsx'
+
+
 const ProductPage = () => {
   const {id}  = useParams()
   const {data, isLoading, error} = useGetProductByIdQuery(id)
   
   const [selectImg, setSelectImg] = useState(null)
-  const [showMore, setShowMore] = useState(false)
   const product = data?.product;
   
 
@@ -45,8 +51,19 @@ const ProductPage = () => {
       </div>
       {/* right */}
       <div className="flex-1 flex flex-col gap-4 p-4">
-      <h1 className="text-3xl font-bold">{product.title}</h1>
-      <p className="text-xl font-semibold">Price: ${product.price}</p>  
+      <h1 className="text-xl font-bold">{product.title}</h1>
+     <div className="flex gap-6 items-center">
+        <p className="text-lg font-semibold">Price: {formatPrice(product.price)}</p>
+       <p className={`${product.stock > 0 ? "text-green-800" : 'text-red-700'} text-lg font-semibold`}>
+        {product.stock > 0 ? 'In Stock' : 'Out of'}
+        </p>
+     </div>
+        {/* quantity and add to cart button */}
+     <div className="">
+      <label htmlFor="quantity" className='mr-4 font-medium'>Quantity:</label>
+      <input type="number" name="quantity" id="quantity"
+        className='w-16 outline-none border border-gray-600 rounded p-1' />
+     </div>
       <ShowMore text={product.description} />
       </div>
     </div>

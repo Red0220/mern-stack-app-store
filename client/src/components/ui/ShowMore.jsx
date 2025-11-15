@@ -8,7 +8,7 @@ const ShowMore = ({text}) => {
 
   return (
     <div>
-        <p className={`text-gray-700 ${!showMore ?'line-clamp-5' : ''}`}>{text}</p>
+        <p className={`text-gray-700 ${!showMore ?'line-clamp-5' : ''} whitespace-pre-line`}>{text}</p>
         {
             text.length > 200 && (
                 <button 
