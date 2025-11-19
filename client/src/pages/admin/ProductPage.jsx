@@ -6,10 +6,11 @@ import { useGetProductByIdQuery } from '../../redux/Api/product.slice.js'
 import IsLoading from '../../components/ui/IsLoading.jsx'
 import { formatPrice } from '../../util/formatPrice.js'
 import Ratings from '../../components/ui/Ratings'
+import ZoomImg from '../../components/ui/ZoomImg.jsx'
+import Button from '../../components/ui/Button.jsx'
 
 //icons
 import { MdAddShoppingCart } from 'react-icons/md'
-import ZoomImg from '../../components/ui/ZoomImg.jsx'
 
 const ProductPage = () => {
   const {id}  = useParams()
@@ -71,7 +72,7 @@ const ProductPage = () => {
        <ZoomImg src={selectImg} alt={product.title} />
       </div>
       {/* product details */}
-      <div className="flex flex-col gap-8 p-4 ">
+      <div className="flex flex-col gap-4 p-2 sm:gap-8 sm:p-4 ">
       <h1 className="text-xl font-bold">{product.title}</h1>
      <div className="flex gap-6 items-center">
         <p className="text-lg font-semibold">Price: {formatPrice(product.price)}</p>
@@ -83,15 +84,18 @@ const ProductPage = () => {
      </div>
         {/* quantity and add to cart button */}
      <div className="flex gap-2 sm:gap-[8rem] items-center">
-     <div className="">
-       <label htmlFor="quantity" className='mr-4 font-medium'>Quantity:</label>
-      <input type="number" name="quantity" id="quantity"
-        className='w-12 outline-none border border-gray-400 rounded p-1.5'
+     <div className="flex  items-center">
+       
+        <select 
+        id="quantity" 
         value={quantity}
-        min={1}
-        max={product.stock}
         onChange={(e)=> setQuantity(Number(e.target.value))}
-         />
+        className='border border-gray-400 rounded px-2 py-1'
+        >
+          {Array.from({length: product.stock}, (_, i) => i + 1).map((num)=> (
+           <option key={num} value={num}>{num}</option>
+          ))}
+        </select>
      </div>
     
       

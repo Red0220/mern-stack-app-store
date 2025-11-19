@@ -1,14 +1,19 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from 'redux-persist/lib/storage'
-import userReducer from './userSlice/user.slice.js'
+
 import { apiSlice} from './Api/apiSlice.js'
 import { setupListeners } from "@reduxjs/toolkit/query";
+
+import userReducer from './userSlice/user.slice.js'
+import cartReducer from './cart/cart.slice.js'
+
 
 
 const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
     user: userReducer,
+    cart: cartReducer,
  
 })
 
