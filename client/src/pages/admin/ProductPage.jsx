@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo} from 'react'
 import { useParams, useNavigate} from 'react-router-dom'
-
+import { useDispatch } from 'react-redux'
 
 import { useGetProductByIdQuery } from '../../redux/Api/product.slice.js'
+import { addToCart, setTotalQuantity } from '../../redux/cart/cart.slice.js'
 import IsLoading from '../../components/ui/IsLoading'
 import { formatPrice } from '../../util/formatPrice.js'
 import Ratings from '../../components/ui/Ratings'
@@ -12,18 +13,21 @@ import ImageGallery from '../../components/ImageGallery'
 import { MdAddShoppingCart } from 'react-icons/md'
 
 const ProductPage = () => {
-  const {id}  = useParams()
-  const navigate = useNavigate()
-  const {data, isLoading, error} = useGetProductByIdQuery(id)
-  const [quantity, setQuantity] = useState(1)
-  const [errMsg, setErrMsg] = useState('')
+  const {id}  = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
+  const {data, isLoading, error} = useGetProductByIdQuery(id);
+  const [quantity, setQuantity] = useState(1);
+  const [errMsg, setErrMsg] = useState('');
   
   const product = data?.product;
   const inStock = product?.stock > 0;
+  const images = useMemo(()=> product?.images, [product]);
   
 
 
- const images = useMemo(()=> product?.images, [product])
  useEffect(()=> {
 
   if(!error) return;
@@ -38,8 +42,15 @@ const ProductPage = () => {
   
  },[error, navigate])
 
-     
-     
+ const handleAddTocart = () => {
+   dispatch(addToCart({
+    ...product,
+    _id: product._id,
+    quantity
+   }));
+   
+ }    
+     console.log('product:', quantity);
   
  if(isLoading) return <IsLoading />
  if(error) return (
@@ -56,6 +67,7 @@ const ProductPage = () => {
       title={product.title}
       />
       {/* product details */}
+      <hr className="border-gray-200 my-2"/>
       <div className="flex flex-col gap-6 p-2 sm:p-4 max-w-xl mx-auto ">
 
       <h1 className="text-xl font-semibold leading-snug text-gray-900">
@@ -92,11 +104,12 @@ const ProductPage = () => {
      
     
       
-        <button 
+        <button type='button'
         className='p-1 sm:p-1.5 ml-8 rounded-md bg-white 
         font-semibold border border-gray-400 w-16 sm:w-56 
-        hover:text-white hover:bg-black transition-colors 
-        active:scale-[0.95]' >
+        hover:text-white hover:bg-black hover:opacity-40 transition-colors 
+        active:scale-[0.95] cursor-pointer'
+        onClick={handleAddTocart} >
        <span className='hidden sm:block'> 
         Add to cart
         </span>

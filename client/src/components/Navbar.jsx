@@ -57,7 +57,7 @@ const Navbar = () => {
         </Link>
 
         <div className="flex  items-center gap-4 sm:gap-6 text-lg sm:text-xl text-slate-800 justify-end">
-          <Link to={"/signup"} className="cursor-pointer hover:opacity-65">
+          <Link to={`/cart/${user?._id}`} className="cursor-pointer hover:opacity-65">
             <FaBagShopping title="shopping cart" size={26} />
           </Link>
 

@@ -54,7 +54,9 @@ const DashBoard = () => {
     </div>
         </>
       ) : (
-        navigate('/signin')
+        <div className='flex flex-col items-center justify-center h-screen'>  
+          <h2 className='text-2xl mb-4'>You must be logged in to access the dashboard. <Link to="/signin"></Link></h2>
+    </div>
       )
      }
     </div>

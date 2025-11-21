@@ -7,9 +7,11 @@ import Navbar from "./components/Navbar";
 
 import Footer from "./pages/Footer";
 
+import PrivateRoutes from "./util/PrivateRoutes";
 import UserForbidden from "./util/UserForbidden";
 import AdminRoute from './util/AdminRoute'
 import ErrorBoundary from "./util/ErrorBoundary";
+import CartShopping from "./pages/product/CartShopping";
 
 const Layout = lazy(() => import("./pages/Layout"));
 const SignUp = lazy(() => import("./pages/Auth/SignUp"));
@@ -36,8 +38,11 @@ const App = () => {
                   <Route path="/signin" element={<SignIn />} />
                 </Route>
                 {/* Dashboard */}
-                <Route path="/dashboard" element={<DashBoard />} />
-                <Route path='/product-details/:id' element={<ProductPage />} />
+                <Route element={<PrivateRoutes />}>
+                  <Route path="/dashboard" element={<DashBoard />} />
+                 <Route path='/product-details/:id' element={<ProductPage />} />
+                 <Route path="/cart/:id" element={<CartShopping/>}/>
+                </Route>
                 {/* Admin */}
                 <Route element={<AdminRoute />}>
                   <Route path="addproduct" element={<AddProduct />} />
