@@ -35,7 +35,7 @@ const ZoomImg = ({ src, alt, zoomLevel = 2, className = "" }) => {
     );
 
     return (
-        <div className={`max-w-md  bg-transparent rounded-md shadow-lg shadow-gray-300 p-4 ${className}`}>
+        <div className={`max-w-md sm:max-w-6xl  bg-transparent rounded-md shadow-lg shadow-gray-300 p-4 ${className}`}>
             <div
                 ref={containerRef}
                 className={`relative overflow-hidden rounded-md 
@@ -49,7 +49,7 @@ const ZoomImg = ({ src, alt, zoomLevel = 2, className = "" }) => {
                 <img
                     src={src}
                     alt={alt}
-                    className="w-full h-96 md:h-[500px] object-cover rounded transition-opacity duration-200"
+                    className="w-[700px] h-96 md:h-[500px] object-cover rounded transition-opacity duration-200"
                     style={{ opacity: isZoomed ? 0.6 : 1 }}
                     draggable="false"
                 />

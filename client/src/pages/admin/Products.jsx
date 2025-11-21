@@ -104,8 +104,8 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 
   if (error) {
     return (
-      <div className="text-center font-semibold text-2xl text-red-600">
-        {error?.data?.message || 'Error loading products.'}
+      <div className="py-5 text-center font-semibold text-xl text-red-600">
+         Error loading products. reload page please.
       </div>
     );
   }
