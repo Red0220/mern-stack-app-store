@@ -17,7 +17,6 @@ const ProductPage = () => {
   const {data, isLoading, error} = useGetProductByIdQuery(id)
   const [quantity, setQuantity] = useState(1)
   const [errMsg, setErrMsg] = useState('')
-  console.log('product data', data)
   
   const product = data?.product;
   const inStock = product?.stock > 0;
@@ -50,26 +49,35 @@ const ProductPage = () => {
  if(!product) return null 
 
   return (
-    <div className='max-w-6xl mx-auto w-full min-h-screen flex flex-col p-10'>
+    <div className='max-w-6xl mx-auto w-full min-h-screen flex flex-col p-2 sm:p-10'>
       {/* left */}
       <ImageGallery
       images={images}
       title={product.title}
       />
       {/* product details */}
-      <div className="flex flex-col gap-4 p-2 sm:gap-8 sm:p-4 ">
-      <h1 className="text-xl font-bold">{product.title}</h1>
-     <div className="flex gap-6 items-center">
-        <p className="text-lg font-semibold">Price: {formatPrice(product.price)}</p>
-       <p className={`px-3 py-1 rounded-full text-sm font-semibold 
-        ${inStock ? "text-green-800 bg-green-100" 
-        : 'text-red-700 bg-red-100'}`}>
+      <div className="flex flex-col gap-6 p-2 sm:p-4 max-w-xl mx-auto ">
+
+      <h1 className="text-xl font-semibold leading-snug text-gray-900">
+        {product.title}
+        </h1>
+     <div className="flex gap-4 items-center">
+
+        <p className="text-lg font-semibold">
+          Price: {formatPrice(product.price)}
+          </p>
+
+       <span 
+       className={`px-3 py-1 rounded-full text-sm font-semibold shasdow-sm
+        ${inStock ? 
+        "text-green-800 bg-green-100" 
+        : 'text-red-800 bg-red-100'}`}
+        >
         {inStock ? 'In Stock' : 'Out of'}
-        </p>
+        </span>
      </div>
         {/* quantity and add to cart button */}
-     <div className="flex gap-2 sm:gap-32 items-center">
-     <div className="flex  items-center">
+     <div className="flex gap-2 sm:gap-32 items-center justify-around sm:justify-start">
        
         <select 
         id="quantity" 
@@ -81,11 +89,17 @@ const ProductPage = () => {
            <option key={num} value={num}>{num}</option>
           ))}
         </select>
-     </div>
+     
     
       
-        <button className='p-1.5 ml-8 rounded bg-white font-semibold border border-gray-400 w-56 hover:text-white hover:bg-black transition-colors' >
-       <span className='hidden sm:block'> Add to cart</span>
+        <button 
+        className='p-1 sm:p-1.5 ml-8 rounded-md bg-white 
+        font-semibold border border-gray-400 w-16 sm:w-56 
+        hover:text-white hover:bg-black transition-colors 
+        active:scale-[0.95]' >
+       <span className='hidden sm:block'> 
+        Add to cart
+        </span>
         <span className='sm:hidden'>
           <MdAddShoppingCart className='inline-block ml-2 text-2xl'/>
         </span>
