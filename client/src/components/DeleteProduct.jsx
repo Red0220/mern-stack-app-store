@@ -7,6 +7,7 @@ import { useDeleteUserMutation } from '../redux/Api/auth.slice.js'
 import { MdDelete } from "react-icons/md";
 
 const DeleteButton = ({ id, onSuccess, entityName = "item" }) => {
+    
     const [deleteProduct, productState] = useDeleteProductMutation();
     const [deleteUser, userState] = useDeleteUserMutation();
 

@@ -24,8 +24,8 @@ const ImageGallery = ({images, title}) => {
                src={img} 
                alt={`${title} image ${i+1}`}
                onClick={()=> setSelectImg(img)}
-                className={`w-14 h-14  object-cover rounded cursor-pointer transition-opacity hover:opacity-65 
-                ${selectImg === img ? 'ring-2 ring-gray-400 ': ''}`}/>
+                className={`w-10 h-10 sm:w-12 sm:h-12  object-cover rounded cursor-pointer transition-opacity hover:opacity-65 
+                ${selectImg === img ? 'ring-2 ring-gray-700 ': ''}`}/>
              </li>
             
             ))} 
@@ -37,7 +37,7 @@ const ImageGallery = ({images, title}) => {
               className='w-full h-96 md:h-[500px] object-cover rounded '/>
              </div>
         */}
-           <ZoomImg src={selectImg} alt={title} />
+           <ZoomImg src={selectImg} alt={title} zoomLevel={2}/>
           </div>
   )
 }

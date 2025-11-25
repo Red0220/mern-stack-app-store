@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import  { useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 const ShowMore = ({text}) => {
@@ -6,9 +7,29 @@ const ShowMore = ({text}) => {
 
     const toggleShowMore = () => setShowMore(p => !p);
 
+    const paragraphs =  useMemo(()=> {
+      return text.split('\n').filter(p => p.trim() !== '');
+    },[text])
+  
+
   return (
-    <div>
-        <p className={`text-gray-700 ${!showMore ?'line-clamp-5' : ''} whitespace-pre-line`}>{text}</p>
+    <div className='space-y-2'>
+        <div 
+        className={`trasition-all duration-300
+        ${showMore ?'' : 'line-clamp-4 '} `}>
+          {
+         
+          paragraphs.map((line, index) => (
+            <p key={index}
+            className='text-gray-700 whitespace-pre-line mb-3 leading-relaxed'
+            >
+              <span className='font-bold text-xl'>-</span> 
+              {" "}{line}
+              <br />
+            </p>
+          ))
+         }
+          </div>
         {
             text.length > 200 && (
                 <button 

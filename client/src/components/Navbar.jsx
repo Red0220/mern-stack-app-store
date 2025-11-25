@@ -1,9 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { FaBagShopping } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
+
+
 import { useLogoutMutation } from "../redux/Api/auth.slice.js";
 import {
   signOutFailure,
@@ -37,9 +39,6 @@ const Navbar = () => {
       setIsOpen(false);
 
     } catch (error) {
-      
-      console.error("Logout failed:", error);
-
       dispatch(signOutFailure(error));
     }
   };

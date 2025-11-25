@@ -1,4 +1,3 @@
-import { hash } from "bcryptjs"
 import { useEffect } from "react"
 
 export const useClickOutside = (ref, callback) => {

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { FiSearch } from 'react-icons/fi';
-import { MdDelete, MdEdit } from 'react-icons/md';
+import {  MdEdit } from 'react-icons/md';
 
 import DeleteButton from '../../components/DeleteProduct.jsx';
 
@@ -39,6 +39,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
     return ()=> clearTimeout(handler)
    }, [query])
    // close menu on outside click or Esc
+   
   useEffect(()=> {
     const handleClickOutSide = e => {
       if(action && !e.target.closest('.action-menu')){

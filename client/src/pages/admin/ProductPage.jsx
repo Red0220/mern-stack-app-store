@@ -1,138 +1,319 @@
-import { useEffect, useState, useMemo} from 'react'
-import { useParams, useNavigate} from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import { useGetProductByIdQuery } from '../../redux/Api/product.slice.js'
-import { addToCart, setTotalQuantity } from '../../redux/cart/cart.slice.js'
-import IsLoading from '../../components/ui/IsLoading'
-import { formatPrice } from '../../util/formatPrice.js'
-import Ratings from '../../components/ui/Ratings'
-import ImageGallery from '../../components/ImageGallery'
+import { useGetProductByIdQuery } from "../../redux/Api/product.slice.js";
+import { addToCart, setTotalQuantity } from "../../redux/cart/cart.slice.js";
+import IsLoading from "../../components/ui/IsLoading";
+import { formatPrice } from "../../util/formatPrice.js";
+import Ratings from "../../components/ui/Ratings";
+import ImageGallery from "../../components/ImageGallery";
+import ShowMore from "../../components/ui/ShowMore";
 
 //icons
-import { MdAddShoppingCart } from 'react-icons/md'
+import { MdAddShoppingCart } from "react-icons/md";
 
 const ProductPage = () => {
-  const {id}  = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-  const {data, isLoading, error} = useGetProductByIdQuery(id);
+  const { data, isLoading, error } = useGetProductByIdQuery(id);
   const [quantity, setQuantity] = useState(1);
-  const [errMsg, setErrMsg] = useState('');
-  
+  const [errMsg, setErrMsg] = useState("");
+
   const product = data?.product;
   const inStock = product?.stock > 0;
-  const images = useMemo(()=> product?.images, [product]);
-  
+  const images = useMemo(() => product?.images, [product]);
 
+  const desc = product?.description;
 
- useEffect(()=> {
+  console.log(desc);
 
-  if(!error) return;
-  const msg = 'Something went wrong. Please try again later.'
-  setErrMsg(msg);
+  useEffect(() => {
+    if (!error) return;
+    const msg = "Something went wrong. Please try again later.";
+    setErrMsg(msg);
 
-    navigate('/', {
-      state:{
-        error: msg
-      }
-    })
-  
- },[error, navigate])
+    navigate("/", {
+      state: {
+        error: msg,
+      },
+    });
+  }, [error, navigate]);
 
- const handleAddTocart = () => {
-   dispatch(addToCart({
-    ...product,
-    _id: product._id,
-    quantity
-   }));
-   
- }    
-     console.log('product:', quantity);
-  
- if(isLoading) return <IsLoading />
- if(error) return (
-  <div className="p-4 text-red-500">{errMsg}</div>
- )
+  const handleAddTocart = () => {
+    dispatch(
+      addToCart({
+        ...product,
+        _id: product._id,
+        quantity,
+      })
+    );
+  };
+  console.log("product:", quantity);
 
- if(!product) return null 
+  if (isLoading) return <IsLoading />;
+  if (error) return <div className="p-4 text-red-500">{errMsg}</div>;
+
+  if (!product) return null;
 
   return (
-    <div className='max-w-6xl mx-auto w-full min-h-screen flex flex-col p-2 sm:p-10'>
-      {/* left */}
-      <ImageGallery
-      images={images}
-      title={product.title}
-      />
-      {/* product details */}
-      <hr className="border-gray-200 my-2"/>
-      <div className="flex flex-col gap-6 p-2 sm:p-4 max-w-xl mx-auto ">
+    <div className="max-w-5xl mx-auto p-4 sm:p-8">
+      {/* TOP SECTION: IMAGE + DETAILS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* LEFT: Product Images */}
+        <div className="">
+          <ImageGallery images={images} title={product.title} />
+        </div>
 
-      <h1 className="text-xl font-semibold leading-snug text-gray-900">
-        {product.title}
-        </h1>
-     <div className="flex gap-4 items-center">
+        {/* RIGHT: PRODUCT DETAILS */}
+        <div className="flex flex-col gap-6">
+          {/* TITLE */}
+          <h1 className="text-2xl font-semibold text-gray-900 leading-snug">
+            {product.title}
+          </h1>
 
-        <p className="text-lg font-semibold">
-          Price: {formatPrice(product.price)}
-          </p>
+          {/* RATINGS */}
+          <div className="flex items-center gap-3">
+            <Ratings rating={product.ratings || 3} onRate={() => {}} />
+            <p className="text-sm text-gray-900 font-medium">
+              ({product.ratings?.toFixed(1) || "0.0"})
+            </p>
+          </div>
 
-       <span 
-       className={`px-3 py-1 rounded-full text-sm font-semibold shasdow-sm
-        ${inStock ? 
-        "text-green-800 bg-green-100" 
-        : 'text-red-800 bg-red-100'}`}
-        >
-        {inStock ? 'In Stock' : 'Out of'}
-        </span>
-     </div>
-        {/* quantity and add to cart button */}
-     <div className="flex gap-2 sm:gap-32 items-center justify-around sm:justify-start">
-       
-        <select 
-        id="quantity" 
-        value={quantity}
-        onChange={(e)=> setQuantity(Number(e.target.value))}
-        className='border border-gray-400 rounded px-2 py-1'
-        >
-          {Array.from({length: product.stock}, (_, i) => i + 1).map((num)=> (
-           <option key={num} value={num}>{num}</option>
-          ))}
-        </select>
-     
-    
-      
-        <button type='button'
-        className='p-1 sm:p-1.5 ml-8 rounded-md bg-white 
-        font-semibold border border-gray-400 w-16 sm:w-56 
-        hover:text-white hover:bg-black hover:opacity-40 transition-colors 
-        active:scale-[0.95] cursor-pointer'
-        onClick={handleAddTocart} >
-       <span className='hidden sm:block'> 
-        Add to cart
-        </span>
-        <span className='sm:hidden'>
-          <MdAddShoppingCart className='inline-block ml-2 text-2xl'/>
-        </span>
-        </button>
-      
-     </div>
-     {/* ratings */}
-     <div className="flex items-center gap-4 p-5 mt-5 border-t border-b border-gray-300">
-      <Ratings 
-      rating={product.rating}
-      onRate={()=> {}}
-      />
-     </div>
-      {/* <div className="">
-        <p className='py-4 font-semibold'>About this item : </p>
+          {/* PRICE + STOCK */}
+          <div className="flex items-center justify-between max-w-sm">
+            <p className="text-xl font-semibold text-gray-900">
+              {formatPrice(product.price)}
+            </p>
+
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-semibold 
+          ${
+            product.stock > 0
+              ? "text-green-800 bg-green-100"
+              : "text-red-800 bg-red-100"
+          }
+        `}
+            >
+              {product.stock > 0 ? "In Stock" : "Out of Stock"}
+            </span>
+          </div>
+
+          {/* QUANTITY + ADD TO CART */}
+          <div className="flex justify-between  items-center gap-4 mt-4">
+            {/* Quantity dropdown */}
+            <select
+              id="quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="border border-gray-400 rounded px-3 py-2"
+            >
+              {Array.from({ length: product.stock || 1 }, (_, i) => i + 1).map(
+                (num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                )
+              )}
+            </select>
+
+            {/* Add to cart button */}
+            <button
+              type="button"
+              onClick={handleAddTocart}
+              className="flex items-center justify-center gap-2 
+    max-w-[50%] flex-1 py-2 px-4 rounded-md 
+    bg-black text-white font-semibold 
+    hover:opacity-80 active:scale-[0.97] 
+    transition-all shadow-sm"
+            >
+              <MdAddShoppingCart className="text-2xl" />
+
+              <span className="hidden sm:inline">Add to cart</span>
+            </button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-end justify-end gap-1 sm:gap-4 text-gray-500 text-xs mt-2">
+            <span className="flex items-center gap-1">
+              ✔️ <span>Fast shipping</span>
+            </span>
+
+            <span className="flex items-center gap-1">
+              ✔️ <span>Secure checkout</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* DESCRIPTION SECTION */}
+      <div className="mt-10 border-t border-t-gray-200 pt-8">
+        <h2 className="text-xl font-semibold text-gray-900 mb-3">
+          About this item:
+        </h2>
+
         <ShowMore text={product.description} />
-      </div> */}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductPage
+export default ProductPage;
+
+// import { useEffect, useState, useMemo} from 'react'
+// import { useParams, useNavigate} from 'react-router-dom'
+// import { useDispatch } from 'react-redux'
+
+// import { useGetProductByIdQuery } from '../../redux/Api/product.slice.js'
+// import { addToCart, setTotalQuantity } from '../../redux/cart/cart.slice.js'
+// import IsLoading from '../../components/ui/IsLoading'
+// import { formatPrice } from '../../util/formatPrice.js'
+// import Ratings from '../../components/ui/Ratings'
+// import ImageGallery from '../../components/ImageGallery'
+// import ShowMore from '../../components/ui/ShowMore'
+
+// //icons
+// import { MdAddShoppingCart } from 'react-icons/md'
+
+// const ProductPage = () => {
+//   const {id}  = useParams();
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const {data, isLoading, error} = useGetProductByIdQuery(id);
+//   const [quantity, setQuantity] = useState(1);
+//   const [errMsg, setErrMsg] = useState('');
+
+//   const product = data?.product;
+//   const inStock = product?.stock > 0;
+//   const images = useMemo(()=> product?.images, [product]);
+
+//   const desc = product?.description;
+
+//   console.log(desc);
+
+//  useEffect(()=> {
+
+//   if(!error) return;
+//   const msg = 'Something went wrong. Please try again later.'
+//   setErrMsg(msg);
+
+//     navigate('/', {
+//       state:{
+//         error: msg
+//       }
+//     })
+
+//  },[error, navigate])
+
+//  const handleAddTocart = () => {
+//    dispatch(addToCart({
+//     ...product,
+//     _id: product._id,
+//     quantity
+//    }));
+
+//  }
+//      console.log('product:', quantity);
+
+//  if(isLoading) return <IsLoading />
+//  if(error) return (
+//   <div className="p-4 text-red-500">{errMsg}</div>
+//  )
+
+//  if(!product) return null
+
+//   return (
+
+// <div className="max-w-5xl mx-auto p-4 sm:p-8">
+
+//   {/* TOP SECTION: IMAGE + DETAILS */}
+//   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+//     {/* LEFT: Product Images */}
+//     <div className="">
+//       <ImageGallery
+//         images={images}
+//         title={product.title}
+//       />
+//     </div>
+
+//     {/* RIGHT: PRODUCT DETAILS */}
+//     <div className="flex flex-col gap-6">
+
+//       {/* TITLE */}
+//       <h1 className="text-2xl font-semibold text-gray-900 leading-snug">
+//         {product.title}
+//       </h1>
+
+//       {/* RATINGS */}
+//       <div className="flex items-center gap-3">
+//         <Ratings rating={product.ratings || 0} onRate={() => {}} />
+//         <p className="text-sm text-gray-900 font-medium">
+//           {product.ratings?.toFixed(1) || "0.0"}
+//         </p>
+//         <p className="text-sm text-gray-600">
+//           ({product.numOfReviews || 0} reviews)
+//         </p>
+//       </div>
+
+//       {/* PRICE + STOCK */}
+//       <div className="flex items-center justify-between max-w-sm">
+//         <p className="text-xl font-semibold text-gray-900">
+//           {formatPrice(product.price)}
+//         </p>
+
+//         <span className={`px-3 py-1 rounded-full text-sm font-semibold
+//           ${product.stock > 0
+//             ? "text-green-800 bg-green-100"
+//             : "text-red-800 bg-red-100"}
+//         `}>
+//           {product.stock > 0 ? "In Stock" : "Out of Stock"}
+//         </span>
+//       </div>
+
+//       {/* QUANTITY + ADD TO CART */}
+//       <div className="flex items-center gap-4 mt-4">
+
+//         {/* Quantity dropdown */}
+//         <select
+//           id="quantity"
+//           value={quantity}
+//           onChange={(e) => setQuantity(Number(e.target.value))}
+//           className="border border-gray-400 rounded px-3 py-2"
+//         >
+//           {Array.from({ length: product.stock || 1 }, (_, i) => i + 1)
+//             .map(num => (
+//               <option key={num} value={num}>{num}</option>
+//           ))}
+//         </select>
+
+//         {/* Add to cart button */}
+//         <button
+//           type="button"
+//           onClick={handleAddTocart}
+//           className="flex-1 py-2 px-4 rounded-md bg-black text-white
+//             font-semibold hover:opacity-80 active:scale-[0.97]
+//             transition-all shadow-sm"
+//         >
+//           Add to cart
+//         </button>
+
+//       </div>
+
+//     </div>
+//   </div>
+
+//   {/* DESCRIPTION SECTION */}
+//   <div className="mt-10 border-t pt-8">
+//     <h2 className="text-xl font-semibold text-gray-900 mb-3">
+//       About this item:
+//     </h2>
+
+//     <ShowMore text={product.description} />
+//   </div>
+
+// </div>
+//   )
+// }
+// export default ProductPage;
