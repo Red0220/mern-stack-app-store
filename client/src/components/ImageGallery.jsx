@@ -13,9 +13,9 @@ const ImageGallery = ({images, title}) => {
     
     if(!images) return null;
   return (
-          <div className="flex flex-col-reverse gap-6 sm:flex-row items-center justify-around mb-2 sm:mb-10 ">
+          <div className="flex flex-col-reverse gap-4 sm:flex-row items-center justify-around mb-2 sm:mb-10 ">
             {/* images */}
-           <div className="flex gap-6 p-8 sm:p-0">
+           <div className="flex gap-6 p-4 sm:p-0">
               <ul className="flex sm:flex-col gap-6 ">
                 {images?.map((img, i)=> (
              

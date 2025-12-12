@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import  {clearCart} from '../../redux/cart/cart.slice.js'
 
 import Bar from '../../components/ui/Bar'
-import Input from '../../components/ui/Input'
+
 
 const CartShopping = () => {
     const user = useSelector(state => state.user.currentUser)

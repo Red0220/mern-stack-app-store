@@ -51,6 +51,7 @@ export const createProduct = async (req, res, next) => {
 
 export const getProductById = async (req, res, next) => {
   const { productId } = req.params ;
+  console.log(productId)
 
   try {
     const product = await Product.findById(productId) ;
@@ -58,10 +59,7 @@ export const getProductById = async (req, res, next) => {
     if(!product) {
       return next(errorHandler(404, 'Product not found.'))
     }
-    res.status(200).json({
-      success :true ,
-      product 
-    })
+    res.status(200).json(product)
   } catch (error) {
     next(error)
   }

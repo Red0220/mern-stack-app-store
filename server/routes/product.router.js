@@ -11,7 +11,8 @@ const router = express.Router();
 router
 .route('/').post(upload.array('images', 6),verifyToken, verifyAdmin , validateProductInput, createProduct)
 .get(getProducts)
-router.route('/:productId').get(verifyToken, getProductById)
-.delete(verifyToken, verifyAdmin, deleteProduct)
+router.route('/:productId').get(getProductById)
+
+router.route('/:productId').delete(verifyToken, verifyAdmin, deleteProduct)
 
 export default router

@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import  { lazy, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
 import Sidebar from './Sidebar'
 
-import Profile from '../../pages/Auth/Profile'
-import AddProduct from '../../pages/product/AddProduct'
-import Products from '../../pages/admin/Products'
-import Orders from '../../pages/orders/Orders'
-import MdDashboard from '../../pages/admin/MdDashboard'
-import Settings from '../../pages/admin/Settings'
-import Users from '../../pages/admin/Users'
-import { useSelector } from 'react-redux'
+const Profile =  lazy(()=> import('../../pages/Auth/Profile'))
+const Orders =  lazy(() => import('../../pages/orders/Orders'))
+
+
+
+const AddProduct = lazy(()=> import('../../pages/product/AddProduct'))  
+const Products = lazy(()=> import('../../pages/admin/Products')) 
+const MdDashboard = lazy(()=> import('../../pages/admin/MdDashboard')) 
+const Settings = lazy(()=> import('../../pages/admin/Settings')) 
+const Users = lazy(()=> import('../../pages/admin/Users')) 
 
 
 

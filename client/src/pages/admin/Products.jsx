@@ -1,7 +1,8 @@
 
 import { useMemo, useState, useCallback, useEffect  } from 'react';
 import { useGetProductsQuery } from '../../redux/Api/product.slice.js';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { FiSearch } from 'react-icons/fi';
@@ -19,9 +20,12 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
 
 
  const Products = () => {
-
+   
+  const { currentUser } = useSelector(state=> state.user)
   const { data, error, isLoading, refetch } = useGetProductsQuery()
   const products = data?.products || []
+
+  const navigate = useNavigate()
 
   const [query, setQuery] = useState('');
   const [debounceQuery, setDebounceQuery] = useState('')
@@ -29,7 +33,12 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(1);
   const [action, setAction] = useState(null)
-  
+  //auth
+  useEffect(()=>{
+    if(!currentUser.isAdmin){
+      navigate('/')
+    }
+  },[currentUser, navigate])
   //debounce search input 
    useEffect(()=> {
     const handler = setTimeout(() => {
@@ -118,10 +127,11 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
       </div>
     );
   }
+ 
   
   
 // log
-console.log('page items', pageItems)
+console.log('page items', currentUser)
   return (
     <div className='p-3 sm:p-4 lg:p-6'>
       <h1 className="text-3xl font-semibold mb-4 text-center text-slate-800">Products Management</h1>

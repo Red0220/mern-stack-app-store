@@ -18,7 +18,8 @@ const SignUp = lazy(() => import("./pages/Auth/SignUp"));
 const SignIn = lazy(() => import("./pages/Auth/SignIn"));
 const AddProduct = lazy(() => import("./pages/product/AddProduct"));
 const DashBoard = lazy(() => import("./components/dashboard/DashBoard"));
-const ProductPage = lazy(() => import("./pages/admin/ProductPage"));
+const ProductPage = lazy(() => import("./pages/product/ProductPage"));
+
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
 
               <Routes>
                 <Route path="/" element={<Layout />} />
+                 <Route path='/product-details/:id' element={<ProductPage />} />
                 {/* User */}
                 <Route element={<UserForbidden />}>
                   <Route path="/signup" element={<SignUp />} />
@@ -40,7 +42,6 @@ const App = () => {
                 {/* Dashboard */}
                 <Route element={<PrivateRoutes />}>
                   <Route path="/dashboard" element={<DashBoard />} />
-                 <Route path='/product-details/:id' element={<ProductPage />} />
                  <Route path="/cart/:id" element={<CartShopping/>}/>
                 </Route>
                 {/* Admin */}
