@@ -3,15 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import  {clearCart} from '../../redux/cart/cart.slice.js'
 
 import Bar from '../../components/ui/Bar'
+import CartItemRow from '../../components/CartItemRow'
 
 
 const CartShopping = () => {
     const user = useSelector(state => state.user.currentUser)
     const {cartItems , ...rest}= useSelector(state => state.cart)
 
-    const dispatch = useDispatch();
-
-    const [steps, setSteps] =  useState(1)
+    const dispatch = useDispatch()
     const [activeStep, setActiveStep] = useState(0)
 
     console.log(cartItems);
@@ -20,7 +19,7 @@ const CartShopping = () => {
         
         <Bar 
         activeStep={activeStep}
-        setActiveStep={setActiveStep}
+        onStepChange={setActiveStep}
         />
         <div className="flex gap-2">
          <table className='flex-1 divide-y divide-gray-800'>
@@ -31,35 +30,27 @@ const CartShopping = () => {
            </tr>
           </thead>
          <tbody className='divide-y divide-gray-800'>
-  {cartItems && cartItems.map((p, i) => (
-    <tr key={i} className=''>
-      {/* PRODUCT CELL */}
-      <td className='py-4 px-4'>
-        <div className='flex items-center gap-32'>
-          <img src={p.images[0]} alt={p.title} className='w-16 h-16 rounded-md object-cover' />
-          <p className='text-sm font-medium w-84'>{p.title}</p>
-          {/* quantity */}
-          <div className="flex gap-2 max-w-54">
-
-            <button>-</button>
-            <input type="number" name="" id=""
-            className='w-16'
-             />
-            <button>+</button>
-          </div>
-        </div>
-      </td>
-
-      {/* TOTAL CELL */}
-      <td className='py-4 text-right font-semibold'>
-        ${p.price.toFixed(2)}
-      </td>
-    </tr>
-  ))}
+          {
+            cartItems.length === 0 && (
+              <tr>
+                <td colSpan={2} className='py-10 text-center text-gray-600'>
+                  Your cart is empty
+                </td>
+              </tr>
+            )
+          }
+          {
+            cartItems.map(item => (
+              <CartItemRow key={item._id} item={item}/>
+            ))
+          }
 </tbody>
          </table>
 
         </div>
+        <button type='button' onClick={() => dispatch(clearCart())} >
+          clear
+        </button>
 
         
     </div>
