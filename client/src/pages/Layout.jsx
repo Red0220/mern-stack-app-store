@@ -5,13 +5,20 @@ import { Link } from "react-router-dom";
 import ImageGallery from "../components/ImageGallery";
 import { useSelector } from "react-redux";
 import IsLoading from "../components/ui/IsLoading";
+import Price from "./product/Price";
+import Ratings from '../components/ui/Ratings'
+import AddToCartBtn from "../components/AddToCartBtn";
+
+
 
 const LandingPage = () => {
 const user = useSelector((state) => state.user?.currentUser);
+const {cartItems } = useSelector((state)=> state.cart)
 const { data, isLoading} = useGetProductsQuery();
-const product = data?.products[0] ?? null;
+const products = data?.products || [];
+const product = products[0];
+const featured = products.slice(0);
 
-const featured = data?.products ? [...data.products] : []
 
 
 if(isLoading) return <IsLoading/>
@@ -29,38 +36,53 @@ if(isLoading) return <IsLoading/>
          
          
           <div className="flex flex-col items-center">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 leading-snug max-w-md">
+          <Link to={`/product-details/${product._id}`} className="text-2xl sm:text-3xl font-semibold text-gray-900 leading-snug max-w-md">
             {product?.title}
-          </h1>
-          {/* <p className="mt-4 text-gray-600 text-lg">
-            Hand-picked quality items delivered fast and securely.
-          </p> */}
-        {/* product detais */}
-        <div className="w-full flex items-start gap-x-10 py-10  space-y-2 text-sm text-gray-700">
-        <p>
-          <span className="font-medium">
-          Price:
-          </span> 
-          {formatPrice(product.price)}
-          
-          </p>
-          <p><span>
-            In Stock</span> {product.stock}</p>
-        </div>
-
-         <div className="flex flex-col sm:flex-row gap-4 w-full justify-between items-center py-6">
-           <Link
-            to={user?._id ?`/cart/${user?._id}` : '/signin'}
-            className="w-full sm:w-auto text-center bg-black text-white px-8 py-3 rounded-md font-semibold hover:bg-gray-800 transition hover:opacity-90"
-          >
-            Place an order
           </Link>
-          <button 
-         className="w-full sm:w-auto text-center bg-yellow-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-yellow-700 transition"
-          >Add to cart</button>
+        
+        {/* product detais */}
+        <Price 
+        price={product.price}
+        stock={product.stock}
+        />
+         <div className="flex flex-col sm:flex-row gap-4 w-full justify-between items-center py-6">
+           <AddToCartBtn 
+           product={product} 
+           />
+          
+          
+            <Link
+            to={ cartItems.length > 0 ? 
+              (user?._id ?`/cart/${user?._id}` : '/signin') 
+              : '#'
+            }
+            className={`w-full sm:w-auto text-center  px-8 py-3 rounded-md font-semibold hover:bg-gray-800 transition hover:opacity-90 
+              ${
+                cartItems.length > 0 ? 'bg-black text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+              }`}
+          >
+            View cart
+          </Link>
+           
          </div>
+        <div className="flex flex-col items-start w-full">
+          <ul className="text-sm text-gray-600 space-y-1 m-2">
+          <li>✔ Free returns within 7 days</li>
+          <li>✔ Secure checkout</li>
+          <li>✔ Fast delivery</li>
+           </ul>
+
+           
+       <div className=" w-full flex gap-4 items-center py-6 px-2">
+        <Ratings rating={product.rating || 0}/>
+        <p className="text-gray-800">{product.numOfReviews || 300} review(s)</p>
+
+       </div>
+        </div>
+
 
         </div>
+
 
        
       </section>
@@ -69,12 +91,11 @@ if(isLoading) return <IsLoading/>
   }
   
       {/* FEATURED PRODUCTS*/}
-      <section className="max-w-6xl mx-auto px-6 py-16">
+      
+          <section className="max-w-6xl mx-auto px-6 py-10">
         <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
 
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
+    
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {featured.map((product) => (
               <Link
@@ -96,7 +117,7 @@ if(isLoading) return <IsLoading/>
               </Link>
             ))}
           </div>
-        )}
+        
       </section> 
 
 

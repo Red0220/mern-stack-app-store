@@ -9,40 +9,30 @@ import IsLoading from "../../components/ui/IsLoading";
 import Ratings from "../../components/ui/Ratings";
 import ImageGallery from "../../components/ImageGallery";
 import ShowMore from "../../components/ui/ShowMore";
-import { formatPrice } from "../../util/formatPrice.js";
 
-import { MdAddShoppingCart } from "react-icons/md";
+
+import Price from "./Price.jsx";
+import AddToCartBtn from "../../components/AddToCartBtn.jsx";
 
 const ProductPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch()
-
+  const [quantity, setQuantity] = useState(1);
   
-
-  const { data, isLoading, error } = useGetProductByIdQuery(id, {
+  console.log(id)
+  
+  
+  const { data, isLoading, error } = useGetProductByIdQuery('691656a3da9f49500ba6f691', {
     skip: !id,
   });
-
+  const product = data;
+  
+  console.log(data)
   if (isLoading) return <IsLoading />;
   if (error) return <div className="p-4 text-red-500">{error?.data?.message}</div>;
 
   
-  const product = data ?? null;
-  console.log(product)
-  const [quantity, setQuantity] = useState(1);
 
- 
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: product._id,
-        title: product.title,
-        price: product.price,
-        quantity,
-        image: product.images?.[0],
-      })
-    );
-  };
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-8">
@@ -66,28 +56,11 @@ const ProductPage = () => {
             </p>
           </div>
 
-          <div className="flex items-center justify-between max-w-md">
-
+      
   {/* LEFT: Price */}
-  <div className="flex items-baseline gap-2">
-    <span className="text-gray-700 text-lg">Price:</span>
-    <span className="text-2xl font-semibold text-gray-900">
-      {formatPrice(product.price)}
-    </span>
-  </div>
-
-  {/* RIGHT: Stock badge */}
-  <span
-    className={`px-3 py-1 rounded-full text-sm font-semibold ${
-      product.stock > 0
-        ? "text-green-800 bg-green-100"
-        : "text-red-800 bg-red-100"
-    }`}
-  >
-    {product.stock > 0 ? "In Stock" : "Out of Stock"}
-  </span>
-
-</div>
+      <Price 
+       price={product.price}
+       stock={product.stock}/>
 
 
           {/* QUANTITY + ADD TO CART */}
@@ -105,17 +78,8 @@ const ProductPage = () => {
             </select>
 
             {/* Add to cart */}
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={product.stock <= 0}
-              className="flex items-center justify-center gap-2 flex-1 
-                         py-2 px-4 rounded-md bg-black text-white font-medium 
-                         hover:opacity-80 active:scale-[0.97] transition-all"
-            >
-              <MdAddShoppingCart className="text-2xl" />
-              Add to Cart
-            </button>
+          <AddToCartBtn 
+          product={product}/>
           </div>
 
           {/* LITTLE BADGES */}

@@ -14,7 +14,7 @@ const CartShopping = () => {
     const [steps, setSteps] =  useState(1)
     const [activeStep, setActiveStep] = useState(0)
 
-    console.log(rest);
+    console.log(cartItems);
   return (
     <div className='py-6 max-w-6xl mx-auto'>
         
