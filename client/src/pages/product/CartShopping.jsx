@@ -22,7 +22,7 @@ const CartShopping = () => {
         onStepChange={setActiveStep}
         />
         <div className="flex gap-2">
-         <table className='flex-1 divide-y divide-gray-800'>
+         <table className='w-full max-w-[50rem] flex-1 divide-y divide-gray-800'>
           <thead>
            <tr>
              <th className='text-left py-2'>Product</th>
