@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { FaBagShopping } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
+import { persistor } from "../redux/store.js"; 
 
 
 import { useLogoutMutation } from "../redux/Api/auth.slice.js";
@@ -30,7 +31,7 @@ const Navbar = () => {
     try {
       const res = await logout().unwrap();
     
-
+      await persistor.purge(); // Clear persisted Redux state
       dispatch(signOutSuccess());
 
       navigate("/signin");

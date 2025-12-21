@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/cart/cart.slice';
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom';
 
 const AddToCartBtn = ({product, quantity}) => {
+   const user = useSelector(state => state.user.currentUser)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [added, setAdded] = useState(false)
 
   if(!product) return null
@@ -15,6 +18,10 @@ const AddToCartBtn = ({product, quantity}) => {
     }
   },[added])
     const handleAddToCart = () => {
+       if(!user){
+        navigate('/signin')
+        return;
+       }
       if(added) return;
       dispatch(
         addToCart({

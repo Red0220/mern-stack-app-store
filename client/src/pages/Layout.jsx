@@ -53,7 +53,7 @@ if(isLoading) return <IsLoading/>
           
             <Link
             to={ cartItems.length > 0 ? 
-              (user?._id ?`/cart/${user?._id}` : '/signin') 
+              (user?._id ?`/checkout/${user?._id}` : '/signin') 
               : '#'
             }
             className={`w-full sm:w-auto text-center  px-8 py-3 rounded-md font-semibold hover:bg-gray-800 transition hover:opacity-90 

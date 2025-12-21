@@ -4,7 +4,7 @@ import { updateCart } from './updateCart';
 
 const initialState = {
     cartItems: [],
-    shoppingAddress: {},
+    shippingAddress: {},
     paymentMethod: 'PayPal',
     totalQuantity: 0,
 }
@@ -16,9 +16,10 @@ const cartSlice = createSlice({
         addToCart : (state, action) => {
             
             if(!action.payload) return;
-            const {id, quantity }= action.payload;
+            const {_id, quantity }= action.payload;
+            console.log('Adding to cart:', _id, 'Quantity:', quantity);
             
-            const existingItem = state.cartItems.findIndex(item => item._id === id );
+            const existingItem = state.cartItems.findIndex(item => item._id === _id );
 
             if (existingItem >= 0) {
                 state.cartItems[existingItem].quantity += quantity;
@@ -27,19 +28,21 @@ const cartSlice = createSlice({
             }
             state.totalQuantity += quantity;
             updateCart(state);
+            
+
         },
         removeFromCart : (state, action) => {
-            const id = action.payload;
-            const existingItem = state.cartItems.find(item => item._id === id);
+            const _id = action.payload;
+            const existingItem = state.cartItems.find(item => item._id === _id);
              if(!existingItem) return;
              state.totalQuantity -= state.cartItems[existingItem].quantity;
-             state.cartItems = state.cartItems.filter(item => item._id !== id);
+             state.cartItems = state.cartItems.filter(item => item._id !== _id);
              updateCart(state);
         },
         setTotalQuantity : (state, action) => {
-            const { id, quantity } = action.payload;
+            const { _id, quantity } = action.payload;
 
-            const existingItem = state.cartItems.findIndex(item => item._id === id);
+            const existingItem = state.cartItems.findIndex(item => item._id === _id);
             if(existingItem !== -1 && quantity >= 1) {
                 state.totalQuantity  += quantity - state.cartItems[existingItem].quantity;
                 state.cartItems[existingItem].quantity = quantity;
@@ -52,7 +55,7 @@ const cartSlice = createSlice({
             updateCart(state);
         },
         saveShippingAddress: (state, action) => {
-            state.shoppingAddress = action.payload;
+            state.shippingAddress = action.payload;
         },
         savePaymentMethod: (state, action) => {
             state.paymentMethod = action.payload;

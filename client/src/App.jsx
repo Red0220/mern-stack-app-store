@@ -11,7 +11,7 @@ import PrivateRoutes from "./util/PrivateRoutes";
 import UserForbidden from "./util/UserForbidden";
 import AdminRoute from './util/AdminRoute'
 import ErrorBoundary from "./util/ErrorBoundary";
-import CartShopping from "./pages/product/CartShopping";
+import CartShopping from "./components/ui/carts/CartShopping";
 
 const Layout = lazy(() => import("./pages/Layout"));
 const SignUp = lazy(() => import("./pages/Auth/SignUp"));
@@ -19,6 +19,7 @@ const SignIn = lazy(() => import("./pages/Auth/SignIn"));
 const AddProduct = lazy(() => import("./pages/product/AddProduct"));
 const DashBoard = lazy(() => import("./components/dashboard/DashBoard"));
 const ProductPage = lazy(() => import("./pages/product/ProductPage"));
+const Checkout = lazy(() => import("./pages/orders/Checkout"));
 
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
                 <Route element={<PrivateRoutes />}>
                   <Route path="/dashboard" element={<DashBoard />} />
                  <Route path="/cart/:id" element={<CartShopping/>}/>
+                <Route path="/checkout/:id" element={<Checkout/>}/>
                 </Route>
                 {/* Admin */}
                 <Route element={<AdminRoute />}>

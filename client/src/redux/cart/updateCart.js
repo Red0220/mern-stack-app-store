@@ -1,18 +1,25 @@
-const addDecimal = (num) => (Math.round(num * 100) / 100).toFixed(2);
 
 export const updateCart = (state) => {
     if(!Array.isArray(state.cartItems)) {
         state.cartItems = [];
     }
-    state.itemsPrice = addDecimal(state.cartItems.reduce((total, item) => total + item.price * item.quantity, 0))
 
-    state.shippingPrice = addDecimal(state.itemsPrice > 100 ? 0 : 10);
-    state.taxPrice = addDecimal(0.15 * state.itemsPrice);
-    state.totalPrice = (
-        Number(state.itemsPrice) +
-        Number(state.shippingPrice) +
-        Number(state.taxPrice)
-    ).toFixed(2);
-    
+    // price in cents
+    const itemsPriceCents = state.cartItems.reduce((acc, item) =>{
+        if(!Number.isInteger(item.price) || !Number.isInteger(item.quantity)) {
+            throw new Error("Item price and quantity must be integers");
+        }
+        return acc + (item.price * item.quantity);
+    }, 0);
+
+    const shippingPriceCents = itemsPriceCents > 10000 ? 0 : 10000; 
+    const taxPriceCents = Math.round(itemsPriceCents * 0.15);
+    const totalPriceCents = itemsPriceCents + shippingPriceCents + taxPriceCents;
+
+    state.itemsPrice = itemsPriceCents;
+    state.shippingPrice = shippingPriceCents;
+    state.taxPrice = taxPriceCents;
+    state.totalPrice = totalPriceCents;
+    console.log('Updated cart:', state);
     return state;
 }

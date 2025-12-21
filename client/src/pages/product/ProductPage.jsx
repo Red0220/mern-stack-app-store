@@ -22,7 +22,7 @@ const ProductPage = () => {
   console.log(id)
   
   
-  const { data, isLoading, error } = useGetProductByIdQuery('691656a3da9f49500ba6f691', {
+  const { data, isLoading, error } = useGetProductByIdQuery(id, {
     skip: !id,
   });
   const product = data;

@@ -96,6 +96,11 @@ const AddProduct = () => {
     }
      
   }
+
+
+  // JSX
+  console.log("formData:", formData);
+  console.log(Number.isInteger('33'));
   return (
     <div className="w-full min-h-screen p-8  bg-white shadow-md">
       <h1 className="text-center text-2xl font-semibold text-slate-800 pb-8">

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import Sidebar from './Sidebar'
 
 const Profile =  lazy(()=> import('../../pages/Auth/Profile'))
-const Orders =  lazy(() => import('../../pages/orders/Orders'))
+const Orders =  lazy(() => import('../../pages/admin/Orders'))
 
 
 
