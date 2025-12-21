@@ -12,7 +12,7 @@ const Checkout = () => {
     const user = useSelector(state => state.user.currentUser)
     const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice, taxPrice, totalPrice}= useSelector(state => state.cart)
     
-    console.log("Checkout User:", user);
+    console.log("Checkout User:", cartItems);
 
     const [activeStep, setActiveStep] = useState(0)
     console.log(shippingAddress);
@@ -55,7 +55,9 @@ const Checkout = () => {
         {activeStep === 2 && <Order />}
        </div>
       
-        
+        {
+          cartItems.length > 0 && (
+            
         <div className="w-[280px] hidden sm:block sticky">
           <CartSummary 
           totalQuantity={totalQuantity}
@@ -65,6 +67,8 @@ const Checkout = () => {
           taxPrice={taxPrice}
           />
           </div>
+          )
+        }
         
      
       </div>

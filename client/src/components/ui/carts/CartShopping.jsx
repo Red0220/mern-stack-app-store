@@ -46,12 +46,16 @@ const CartShopping = ({cartItems}) => {
         </div>
         
           <div className='flex justify-end mt-6'>
-            <button
+          {
+            cartItems.length > 0 && (
+                <button
               onClick={() => dispatch(clearCart())}
               className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition'
             >
               Clear Cart
             </button>
+            )
+          }
           </div>
         
     </div>

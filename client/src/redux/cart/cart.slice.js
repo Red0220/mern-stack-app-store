@@ -13,43 +13,63 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addToCart : (state, action) => {
-            
-            if(!action.payload) return;
-            const {_id, quantity }= action.payload;
-            console.log('Adding to cart:', _id, 'Quantity:', quantity);
-            
-            const existingItem = state.cartItems.findIndex(item => item._id === _id );
+        addToCart: (state, action) => {
+
+            if (!action.payload) return;
+            const { id, quantity } = action.payload;
+            console.log('Adding to cart:', id, 'Quantity:', quantity);
+
+            const existingItem = state.cartItems.findIndex(item => item.id === id);
 
             if (existingItem >= 0) {
                 state.cartItems[existingItem].quantity += quantity;
             } else {
-                state.cartItems.push({ ...action.payload, quantity});
+                state.cartItems.push({ ...action.payload, quantity });
             }
             state.totalQuantity += quantity;
             updateCart(state);
-            
+
 
         },
-        removeFromCart : (state, action) => {
-            const _id = action.payload;
-            const existingItem = state.cartItems.find(item => item._id === _id);
-             if(!existingItem) return;
-             state.totalQuantity -= state.cartItems[existingItem].quantity;
-             state.cartItems = state.cartItems.filter(item => item._id !== _id);
-             updateCart(state);
-        },
-        setTotalQuantity : (state, action) => {
-            const { _id, quantity } = action.payload;
+        removeFromCart: (state, action) => {
+            const id = action.payload;
+            const existingItem = state.cartItems.find(item => item.id === id);
+            if (!existingItem) return;
+            state.totalQuantity -= existingItem.quantity;
+            state.cartItems = state.cartItems.filter(item => item.id !== id)
 
-            const existingItem = state.cartItems.findIndex(item => item._id === _id);
-            if(existingItem !== -1 && quantity >= 1) {
-                state.totalQuantity  += quantity - state.cartItems[existingItem].quantity;
-                state.cartItems[existingItem].quantity = quantity;
+            updateCart(state);
+        },
+        incrementQuantity: (state, action) => {
+            const item = state.cartItems.find(item => item.id === action.payload);
+            if (!item) return;
+            item.quantity += 1;
+            state.totalQuantity += 1;
+            updateCart(state);
+        },
+        decrementQuantity: (state, action) => {
+            console.log("Decrementing item with id:", action.payload);
+            const item = state.cartItems.find(item => item.id === action.payload);
+            if (!item) return;
+            if (item.quantity === 1) {
+                state.totalQuantity -= 1;
+                state.cartItems = state.cartItems.filter(i => i.id !== item.id);
+            } else {
+                item.quantity -= 1;
+                state.totalQuantity -= 1;
             }
+            updateCart(state);
+        },
+        setTotalQuantity: (state, action) => {
+            const { id, quantity } = action.payload;
+
+            const item = state.cartItems.findIndex(item => item.id === id);
+            if (!item) return;
+            state.totalQuantity += quantity - item.quantity;
+            item.quantity = quantity;
             updateCart(state)
         },
-        clearCart : (state) => {
+        clearCart: (state) => {
             state.cartItems = [];
             state.totalQuantity = 0;
             updateCart(state);
@@ -63,6 +83,15 @@ const cartSlice = createSlice({
     }
 })
 
-export const { addToCart, removeFromCart, setTotalQuantity, clearCart, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
+export const {
+    addToCart, 
+    removeFromCart,
+    setTotalQuantity,
+    incrementQuantity,
+    decrementQuantity,
+    clearCart,
+    saveShippingAddress,
+    savePaymentMethod
+     } = cartSlice.actions;
 
 export default cartSlice.reducer;

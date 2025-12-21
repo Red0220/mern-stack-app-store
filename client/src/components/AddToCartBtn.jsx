@@ -28,6 +28,7 @@ const AddToCartBtn = ({product, quantity}) => {
           id: product._id,
           title: product.title,
           price: product.price,
+          stock: product.stock,
           quantity: quantity || 1 ,
           image: product.images?.[0],
         })
