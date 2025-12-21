@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatPrice } from '../../../util/formatPrice.js'
 
 const CartSummary = ({
     totalQuantity,
@@ -9,31 +10,31 @@ const CartSummary = ({
 }) => {
   return (
 
-    <div className="flex-1 border rounded-lg p-4 max-w-[300px] space-y-3">
+    <div className=" border rounded-lg px-4 py-4 space-y-2 shadow-md">
       <h2 className="font-semibold text-center">
         Cart Summary
       </h2>
 
       <div className="flex justify-between">
         <span>Items ({totalQuantity})</span>
-        <span>${itemsPrice}</span>
+        <span>{formatPrice(itemsPrice)}</span>
       </div>
 
       <div className="flex justify-between text-gray-600">
         <span>Shipping</span>
-        <span>${shippingPrice}</span>
+        <span>{formatPrice(shippingPrice)}</span>
       </div>
 
       <div className="flex justify-between text-gray-600">
         <span>Tax</span>
-        <span>${taxPrice}</span>
+        <span>{formatPrice(taxPrice)}</span>
       </div>
 
       <hr />
 
       <div className="flex justify-between font-semibold">
         <span>Total</span>
-        <span>${totalPrice}</span>
+        <span>{formatPrice(totalPrice)}</span>
       </div>
     </div>
   )

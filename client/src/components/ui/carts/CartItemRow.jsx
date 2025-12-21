@@ -1,9 +1,11 @@
 import { FaTrash} from 'react-icons/fa'
+import { formatPrice } from '../../../util/formatPrice';
 const CartItemRow = ({ item, k }) => {
+  const price = item.price * item.quantity;
   return (
    
-     <tr className="border-b" key={k}>
-      <td className="py-4 px-4">
+     <tr className="border-b  flex items-center gap-4" key={k}>
+      <td className="">
         <div className="flex items-center gap-4">
           <img
             src={item.image}
@@ -27,13 +29,13 @@ const CartItemRow = ({ item, k }) => {
           </div>
         </div>
       </td>
-
-      <td className="py-8 px-4 flex items-center gap-4">
+         
+      <td className="flex items-center justify-between gap-3 hover:bg-gray-50 rounded px-2 py-1 min-w-[100px]">
         <button >
           <FaTrash className="text-red-600 hover:text-red-800"/>
         </button>
 
-       <div className="font-semibold "> ${(item.price * item.quantity).toFixed(2)}</div>
+       <span className="font-semibold"> {formatPrice(price)}</span>
       
       
       </td>

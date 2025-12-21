@@ -79,7 +79,8 @@ const ProductPage = () => {
 
             {/* Add to cart */}
           <AddToCartBtn 
-          product={product}/>
+          product={product}
+          quantity={quantity} />
           </div>
 
           {/* LITTLE BADGES */}

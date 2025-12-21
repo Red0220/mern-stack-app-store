@@ -3,7 +3,7 @@ import { errorHandler } from "./errorHandler.js";
 /*---------------- helper functions ----------------*/
 
 const isValidString = (input) => typeof input === "string" && input.trim().length > 0;
-const isValidNum = (val) => Number.isInteger(val) && Number.isFinite(val);
+const isValidInt = (val) => Number.isInteger(val) && Number.isFinite(val);
 
 const toCents = (n) => {
     if(n === undefined || n === null || n == '') return undefined;
@@ -53,25 +53,25 @@ export const validateProductInput = (req, res, next) => {
         );
     }
 
-    if (!isValidNum(priceInCents) || priceInCents <= 0) {
+    if (!isValidInt(priceInCents) || priceInCents <= 0) {
         return next(
             errorHandler(400, "Price is required.")
         );
     }
 
-    if (offer && (discountPrice !== undefined && (!isValidNum(discountPrice) || discountPrice <= 0))) {
-        return next(errorHandler(400, "Discount Price must be a valid number greater than 0 if provided."));
+    if (offer && (discountPriceInCents !== undefined && (!isValidInt(discountPriceInCents) || discountPriceInCents <= 0))) {
+        return next(errorHandler(400, "Discount Price must be a valid integer greater than 0 if provided."));
     }
-    if (stockNum !== undefined && (!isValidNum(stockNum) || stockNum < 0)) {
+    if (stockNum !== undefined && (!isValidInt(stockNum) || stockNum < 0)) {
         return next(
-            errorHandler(400, "Stock must be a valid number greater than or equal to 0 if provided.")
+            errorHandler(400, "Stock must be a valid integer greater than or equal to 0 if provided.")
         );
     }
     if (offer === true) {
 
-      if(!isValidNum(discountPriceInCents) || discountPriceInCents <= 0) {
+      if(!isValidInt(discountPriceInCents) || discountPriceInCents <= 0) {
         return next(
-            errorHandler(400, "Discount Price must be a valid number greater than 0 if offer is true.")
+            errorHandler(400, "Discount Price must be a valid integer greater than 0 if offer is true.")
         );
       }
         if (discountPriceInCents >= priceInCents) {

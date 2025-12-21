@@ -6,12 +6,13 @@ import { CHECKOUT_STEPS } from '../../data/checkoutSteps'
 import CartShopping from '../../components/ui/carts/CartShopping'
 import ShippingAddres from '../user/ShippingAddres'
 import Order from './Order'
+import CartSummary from '../../components/ui/carts/CartSummary'
 
 const Checkout = () => {
     const user = useSelector(state => state.user.currentUser)
-    const {cartItems , shippingAddress, paymentMethod}= useSelector(state => state.cart)
+    const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice, taxPrice, totalPrice}= useSelector(state => state.cart)
     
-    console.log("Checkout User:");
+    console.log("Checkout User:", user);
 
     const [activeStep, setActiveStep] = useState(0)
     console.log(shippingAddress);
@@ -41,20 +42,32 @@ const Checkout = () => {
 
 
   return (
-    <div className='px-4 py-8 '>
+    <div className='max-w-6xl mx-auto px-4 py-6'>
       <Bar 
       activeStep={activeStep}
       onStepChange={handleStepChange}
       canAccessStep={canAccessStep}
       />
-
-      {
-        activeStep === 0 && <CartShopping onNext={() => handleStepChange(1)} />
-      }
-      { activeStep === 1 && <ShippingAddres  onNext={() => handleStepChange(2)} onBack={() => handleStepChange(0)} /> }
-      { activeStep === 2 && <Order onBack={() => handleStepChange(1)} /> }
-
-    
+      <div className="px-2 py-6 flex justify-between gap-8 items-start">
+       <div className="flex-1">
+        {activeStep === 0 && <CartShopping cartItems={cartItems} />}
+        {activeStep === 1 && <ShippingAddres />}
+        {activeStep === 2 && <Order />}
+       </div>
+      
+        
+        <div className="w-[280px] hidden sm:block sticky">
+          <CartSummary 
+          totalQuantity={totalQuantity}
+          totalPrice={totalPrice}
+          itemsPrice={itemsPrice}
+          shippingPrice={shippingPrice}
+          taxPrice={taxPrice}
+          />
+          </div>
+        
+     
+      </div>
     </div>
   )
 }

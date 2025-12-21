@@ -12,7 +12,7 @@ export const updateCart = (state) => {
         return acc + (item.price * item.quantity);
     }, 0);
 
-    const shippingPriceCents = itemsPriceCents > 10000 ? 0 : 10000; 
+    const shippingPriceCents = itemsPriceCents > 1000 ? 0 : 1000; 
     const taxPriceCents = Math.round(itemsPriceCents * 0.15);
     const totalPriceCents = itemsPriceCents + shippingPriceCents + taxPriceCents;
 

@@ -1,27 +1,23 @@
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch} from 'react-redux'
 import  { clearCart } from '../../../redux/cart/cart.slice.js'
 
-import Bar from '../Bar'
 import CartItemRow from './CartItemRow'
-import CartSummary from './CartSummary.jsx'
 
 
-const CartShopping = () => {
+const CartShopping = ({cartItems}) => {
     
-    const {cartItems, ...summary }= useSelector(state => state.cart)
+    
 
     const dispatch = useDispatch()
     
 
-    console.log(summary);
   return (
     <div className='py-6'>
       
-          <h1 className='text-lg font-semibold text-center '>Shopping Cart</h1>
+        <h1 className='text-lg font-semibold text-center '>Shopping Cart</h1>
         <div className="flex items-center">
 
-         <table className='w-full border-collapse flex-1'>
+         <table className='w-full border-collapse'>
           <thead>
            <tr>
              <th className='text-left py-2'>Product</th>
@@ -47,13 +43,6 @@ const CartShopping = () => {
 
          </table>
 
-        <CartSummary 
-          totalQuantity={summary.totalQuantity}
-          itemsPrice={summary.itemsPrice}
-          shippingPrice={summary.shippingPrice}
-          taxPrice={summary.taxPrice}
-          totalPrice={summary.totalPrice} 
-          />
         </div>
         
           <div className='flex justify-end mt-6'>
