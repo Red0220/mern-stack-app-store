@@ -15,16 +15,16 @@ const CartShopping = ({cartItems}) => {
     <div className='py-6'>
       
         <h1 className='text-lg font-semibold text-center '>Shopping Cart</h1>
-        <div className="flex items-center">
+        <div>
 
-         <table className='w-full border-collapse'>
+         <table className='w-full'>
           <thead>
            <tr>
-             <th className='text-left py-2'>Product</th>
-            <th className='text-left py-2'>Total</th>
+             <th className='text-left py-3 w-[80%]'>Product</th>
+            <th className='text-left py-3 w-[20%]'>Total</th>
            </tr>
           </thead>
-         <tbody className='divide-y divide-gray-800'>
+         <tbody className='divide-y-4 divide-red-800'>
           {
             cartItems.length === 0 && (
               <tr>
@@ -35,7 +35,7 @@ const CartShopping = ({cartItems}) => {
             )
           }
           {
-            cartItems.map(item => (
+            cartItems?.map(item => (
               <CartItemRow key={item.id}  item={item}/>
             ))
           }
@@ -48,7 +48,7 @@ const CartShopping = ({cartItems}) => {
           <div className='flex justify-end mt-6'>
           {
             cartItems.length > 0 && (
-                <button
+              <button
               onClick={() => dispatch(clearCart())}
               className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition'
             >

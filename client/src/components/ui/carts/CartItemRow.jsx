@@ -2,8 +2,10 @@ import { FaTrash} from 'react-icons/fa'
 import { formatPrice } from '../../../util/formatPrice';
 import { useDispatch } from 'react-redux';
 import { incrementQuantity, decrementQuantity} from '../../../redux/cart/cart.slice.js'
+
+
 const CartItemRow = ({ item, k }) => {
- console.log("CartItemRow item:", item);
+ 
   const dispatch = useDispatch();
 
   const handleIncrement = () => {
@@ -17,16 +19,16 @@ const CartItemRow = ({ item, k }) => {
   const price = item.price * item.quantity;
   return (
    
-     <tr className="border-b  flex items-center gap-4" key={k}>
-      <td className="">
-        <div className="flex items-center gap-4">
+     <tr className="border-b border-gray-500  " key={k}>
+      <td>
+        <div className="inline-flex items-center gap-4">
           <img
             src={item.image}
             alt={item.title}
             className="w-16 h-16 rounded-md object-cover"
           />
 
-          <p className="text-sm font-medium line-clamp-2">
+          <p className="px-2 text-sm font-medium line-clamp-2">
             {item.title}
           </p>
 
@@ -54,15 +56,17 @@ const CartItemRow = ({ item, k }) => {
         </div>
       </td>
          
-      <td className="flex items-center justify-between gap-3 hover:bg-gray-50 rounded px-2 py-1 ">
+     <td className='py-6 text-right align-middle '>
+       <div className="inline-flex items-center  gap-5 hover:bg-gray-50 rounded px-2 py-1 ">
         <button >
           <FaTrash className="text-red-600 hover:text-red-800"/>
         </button>
 
-       <span className="font-semibold min-w-[80px]"> {formatPrice(price)}</span>
+       <span className="font-semibold "> {formatPrice(price)}</span>
       
       
-      </td>
+      </div>
+     </td>
     </tr>
    
   );

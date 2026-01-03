@@ -12,14 +12,14 @@ export const updateCart = (state) => {
         return acc + (item.price * item.quantity);
     }, 0);
 
-    const shippingPriceCents = itemsPriceCents > 1000 ? 0 : 1000; 
-    const taxPriceCents = Math.round(itemsPriceCents * 0.15);
+    const shippingPriceCents = 0; // Free shipping for simplicity
+    const taxPriceCents = 0;
     const totalPriceCents = itemsPriceCents + shippingPriceCents + taxPriceCents;
 
     state.itemsPrice = itemsPriceCents;
     state.shippingPrice = shippingPriceCents;
     state.taxPrice = taxPriceCents;
     state.totalPrice = totalPriceCents;
-    console.log('Updated cart:', state);
+    
     return state;
 }

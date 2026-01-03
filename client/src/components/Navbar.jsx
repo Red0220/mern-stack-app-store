@@ -17,6 +17,7 @@ import DropDown from "./ui/DropDown";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.currentUser);
+  const { cartItems } = useSelector((state) => state.cart);
   const [logout] = useLogoutMutation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -56,8 +57,8 @@ const Navbar = () => {
           <h1 className="text-xl font-semibold">Logo</h1>
         </Link>
 
-        <div className="flex  items-center gap-4 sm:gap-6 text-lg sm:text-xl text-slate-800 justify-end">
-          <Link to={`/cart/${user?._id}`} className="cursor-pointer hover:opacity-65">
+        <div className="flex items-center gap-4 sm:gap-6 text-lg sm:text-xl text-slate-800 justify-end">
+          <Link to={`/checkout/${user?._id}`} className="cursor-pointer hover:opacity-65">
             <FaBagShopping title="shopping cart" size={26} />
           </Link>
 

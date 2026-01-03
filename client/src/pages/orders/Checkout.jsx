@@ -10,12 +10,10 @@ import CartSummary from '../../components/ui/carts/CartSummary'
 
 const Checkout = () => {
     const user = useSelector(state => state.user.currentUser)
-    const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice, taxPrice, totalPrice}= useSelector(state => state.cart)
+    const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice,  totalPrice}= useSelector(state => state.cart || {})
     
-    console.log("Checkout User:", cartItems);
 
     const [activeStep, setActiveStep] = useState(0)
-    console.log(shippingAddress);
     
     const context = { cartItems, shippingAddress, paymentMethod}
     
@@ -27,18 +25,13 @@ const Checkout = () => {
     if (!canAccessStep(activeStep)) {
       setActiveStep(p => Math.max(0, p - 1));
     }
-  }, [cartItems, shippingAddress, paymentMethod]);
+  }, [activeStep, cartItems, shippingAddress, paymentMethod]);
   
      const handleStepChange = (step) => {
       if(!canAccessStep(step)) return
       setActiveStep(step)
      }
 
-     console.table({
-  step0: canAccessStep(0),
-  step1: canAccessStep(1),
-  step2: canAccessStep(2),
-});
 
 
   return (
@@ -48,7 +41,7 @@ const Checkout = () => {
       onStepChange={handleStepChange}
       canAccessStep={canAccessStep}
       />
-      <div className="px-2 py-6 flex justify-between gap-8 items-start">
+      <div className="px-2 py-6 flex justify-between  gap-8 items-start">
        <div className="flex-1">
         {activeStep === 0 && <CartShopping cartItems={cartItems} />}
         {activeStep === 1 && <ShippingAddres />}
@@ -58,13 +51,14 @@ const Checkout = () => {
         {
           cartItems.length > 0 && (
             
-        <div className="w-[280px] hidden sm:block sticky">
+        <div className="w-[280px] hidden sm:block sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-auto">
           <CartSummary 
           totalQuantity={totalQuantity}
           totalPrice={totalPrice}
           itemsPrice={itemsPrice}
           shippingPrice={shippingPrice}
-          taxPrice={taxPrice}
+          activeStep={activeStep}
+          
           />
           </div>
           )
