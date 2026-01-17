@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Bar from '../../components/ui/Bar'
 import { CHECKOUT_STEPS } from '../../data/checkoutSteps'
@@ -9,23 +9,23 @@ import Order from './Order'
 import CartSummary from '../../components/ui/carts/CartSummary'
 
 const Checkout = () => {
-    const user = useSelector(state => state.user.currentUser)
+    // const user = useSelector(state => state.user.currentUser)
     const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice,  totalPrice}= useSelector(state => state.cart || {})
-    
+    console.log('shippingAddress', shippingAddress);
 
     const [activeStep, setActiveStep] = useState(0)
     
     const context = { cartItems, shippingAddress, paymentMethod}
     
     
-    const canAccessStep = (step) => CHECKOUT_STEPS.slice(0, step + 1).every(s => s.isAllowed(context))
+    const canAccessStep = (step) => CHECKOUT_STEPS.slice(0, step).every(s => s.isAllowed(context))
     
     useEffect(() => {
 
     if (!canAccessStep(activeStep)) {
-      setActiveStep(p => Math.max(0, p - 1));
+      setActiveStep(0);
     }
-  }, [activeStep, cartItems, shippingAddress, paymentMethod]);
+  }, [ cartItems, shippingAddress, paymentMethod]);
   
      const handleStepChange = (step) => {
       if(!canAccessStep(step)) return

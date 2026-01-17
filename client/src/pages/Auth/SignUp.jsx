@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { toast} from 'react-toastify'
 
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+
 import { useSignUpMutation } from '../../redux/Api/auth.slice.js'
 import { signinStart, signinFailure, signOutSuccess, signinSuccess} from '../../redux/userSlice/user.slice.js'
 
 import Input from "../../components/ui/Input"
+import Button from '../../components/ui/Button'
 
 const SignUp = () => {
   
@@ -96,11 +99,11 @@ const SignUp = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           value={confirmPassword}
           />
-          <button type='submit' className=' w-[60%] lg:w-76 text-slate-800 font-medium p-2.5 border border-gray-100 rounded-md shadow-md hover:opacity-50 focus:ring-2 focus:ring-gray-200  transition duration-200 cursor-pointer'>
+          <Button type='submit'>
            {
             isLoading ? 'Signing Up...' : 'Sign Up'
            }    
-          </button>
+          </Button>
 
         </form>
         {error && <p className='text-red-500'>{error?.data?.message}</p>}
