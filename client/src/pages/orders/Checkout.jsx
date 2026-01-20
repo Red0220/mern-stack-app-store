@@ -11,7 +11,6 @@ import CartSummary from '../../components/ui/carts/CartSummary'
 const Checkout = () => {
     // const user = useSelector(state => state.user.currentUser)
     const {cartItems, shippingAddress, paymentMethod, totalQuantity, itemsPrice, shippingPrice,  totalPrice}= useSelector(state => state.cart || {})
-    console.log('shippingAddress', shippingAddress);
 
     const [activeStep, setActiveStep] = useState(0)
     
@@ -51,7 +50,7 @@ const Checkout = () => {
         {
           cartItems.length > 0 && (
             
-        <div className="w-[280px] hidden sm:block sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-auto">
+        <div className="w-[280px] hidden md:block sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-auto">
           <CartSummary 
           totalQuantity={totalQuantity}
           totalPrice={totalPrice}

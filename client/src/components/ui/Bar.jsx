@@ -5,7 +5,7 @@ const Bar = ({activeStep, onStepChange, canAccessStep}) => {
 
 
   return (
-    <div className='max-w-6xl mx-auto  h-16 bg-gray-100  rounded shadow-sm py-3 px-4 '>
+    <div className='max-w-6xl mx-auto  h-16 bg-gray-100  rounded shadow-sm py-3 px-4 hidden sm:block'>
       <div className="flex items-center">
           {
             CHECKOUT_STEPS.map((item, index) => {
