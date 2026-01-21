@@ -12,10 +12,11 @@ import DeleteButton from '../../components/DeleteProduct.jsx';
 
 import IsLoading from '../../components/ui/IsLoading.jsx';
 import { formatPrice} from "../../util/formatPrice.js"
+import Pagination from '../../components/Pagination.jsx';
 
 const PAGE_SIZE = 10;
  //STYLES **
-const BUTTON_STYLE = 'px-3 py-1 border border-gray-100 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
+
 const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-gray-50 text-sm'
 
 
@@ -35,6 +36,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
   const [action, setAction] = useState(null)
   //auth
   useEffect(()=>{
+    if(!currentUser) return;
     if(!currentUser.isAdmin){
       navigate('/')
     }
@@ -130,8 +132,7 @@ const BTN_STYLE = 'flex gap-2 items-center w-full text-left px-3 py-2 hover:bg-g
  
   
   
-// log
-console.log('page items', currentUser)
+
   return (
     <div className='p-3 sm:p-4 lg:p-6'>
       <h1 className="text-3xl font-semibold mb-4 text-center text-slate-800">Products Management</h1>
@@ -268,22 +269,14 @@ console.log('page items', currentUser)
         <div className="text-sm text-gray-600">
           Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
         </div>
-
-        <div className="flex items-center gap-2">
-          <button 
-          onClick={()=> setPage(p => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className={BUTTON_STYLE}>
-            prev
-          </button>
-          <div className="px-3 py-1 border border-gray-100 bg-gray-50 text-sm">{page} / {totalPages}</div>
-          <button 
-          onClick={()=> setPage(p => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-          className={BUTTON_STYLE}>
-            Next
-          </button>
-        </div>
+           
+           <Pagination 
+            canGoBack={page > 1}
+            canGoNext={page < totalPages}
+            onBack={() => setPage(p => Math.max(1, p -1))}
+            onNext={() => setPage(p => Math.min(totalPages, p +1))}
+           />
+      
       </div>
     </div>
   )

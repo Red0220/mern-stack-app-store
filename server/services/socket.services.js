@@ -1,13 +1,13 @@
 import { io } from '../index.js'
 
-export const emitToAll = (event, data) => {
-    io.emit(event, data)
+export const emitToAll = (event, payload) => {
+    io.emit(event, payload)
 }
 
-export const emitToRoom = (roomId, event, data) => {
-    io.to(roomId).emit(event, data)
+export const emitToRoom = (userId, event, payload) => {
+    io.to(`user:${userId}`).emit(event, payload)
 }
 
-export const emitToUser = (userId, event, data) => {
-    io.to(userId).emit(event, data)
+export const emitToUser = (userId, event, payload) => {
+    io.to(userId).emit(event, payload)
 }
