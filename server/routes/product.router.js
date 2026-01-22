@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../utilities/vrifyToken.js";
+import { verifyToken } from "../utilities/verifyToken.js";
 import { verifyAdmin } from "../utilities/verifyAdmin.js";
 import { validateProductInput } from "../middleware/validateProductInput.js";
 import { createProduct, deleteProduct, getProductById, getProducts } from "../controllers/product.controller.js";

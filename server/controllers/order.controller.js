@@ -30,20 +30,22 @@ export const createOrder = async (req, res, next) => {
       product.stock -= item.quantity;
       await product.save({ session });
 
+      
+
       dbOrderItems.push({
         product: product._id,
-        name: product.name,
-        image: product.image,
+        name: product.title,
+        image: product.images[0],
         price: product.price,
         quantity: item.quantity,
       });
     }
-
+    
     const { itemsPrice, taxPrice, totalPrice } = calculateTotal(dbOrderItems);
 
     const order = new Order({
       orderItems: dbOrderItems,
-      user: req.user._id,
+      user: req.user.id,
       shippingAddress,
       paymentMethod,
       itemsPrice,
@@ -60,7 +62,7 @@ export const createOrder = async (req, res, next) => {
     
       emitToAdmins("order:created:v1", {
         orderId: createdOrder._id,
-        userId: req.user._id,
+        userId: req.user.id,
         totalPrice: createdOrder.totalPrice,
         createdAt: createdOrder.createdAt,
       });
@@ -81,17 +83,18 @@ export const createOrder = async (req, res, next) => {
 };
 
 export const getOrderById = async (req, res, next) => {
+
   try {
-    const order = await Order.findById(req.params.id).populate(
+    const order = await Order.findById(req.params.orderId).populate(
       "user",
       "name email",
     );
     if (!order) {
       return next(errorHandler(404, "Order not found"));
     }
-    const isOwner = order.user._id.toString() === req.user._id.toString();
+  
+    const isOwner = order.user.id.toString() === req.user.id.toString();
     const isAdmin = req.user.isAdmin;
-
     if (!isOwner && !isAdmin) {
       return next(errorHandler(403, "Not authorized to view this order"));
     }

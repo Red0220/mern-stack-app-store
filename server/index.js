@@ -14,6 +14,7 @@ import { socketAuth } from './middleware/socket.auth.js'
 
 import userRouter from './routes/auth.router.js'
 import productRouter from './routes/product.router.js'
+import orderRouter from './routes/order.router.js'
 
 
 
@@ -51,6 +52,7 @@ connectDb();
 // routers 
 app.use('/server/auth', userRouter);
 app.use('/server/product', productRouter);
+app.use('/server/order', orderRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

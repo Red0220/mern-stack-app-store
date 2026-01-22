@@ -1,6 +1,6 @@
 import express from "express";
 import { socketMiddleware } from '../middleware/socke.js';
-import { verifyToken } from "../utilities/vrifyToken.js";
+import { verifyToken } from "../utilities/verifyToken.js";
 import { verifyAdmin } from "../utilities/verifyAdmin.js";
 
 import {

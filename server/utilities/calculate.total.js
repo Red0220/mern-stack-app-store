@@ -1,4 +1,3 @@
-import { setTotalQuantity } from "../../client/src/redux/cart/cart.slice";
 
 export const calculateTotal =  (items) => {
     const TAX_RATE = 0.1; // 10% tax
