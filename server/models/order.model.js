@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
+    checkoutId: {
+        type: String,
+        required: true,
+        unique: true
+    },
     user:{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',

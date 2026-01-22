@@ -7,11 +7,12 @@ import { emitToAdmins, emitToUser } from "../services/socket.services.js";
 import { validateOrderItems } from "../utilities/validate.orderItems.js";
 
 export const createOrder = async (req, res, next) => {
-
+  // log
+  console.log("Creating order:", req.body);
   const session = await mongoose.startSession();
 
   try {
-    const { orderItems, shippingAddress, paymentMethod } = req.body;
+    const { orderItems, shippingAddress, paymentMethod, checkoutId } = req.body;
 
     if (orderItems && orderItems.length === 0) {
       return next(errorHandler(400, "No order items"));
@@ -20,7 +21,7 @@ export const createOrder = async (req, res, next) => {
     session.startTransaction();
 
     const products = await Product.find({
-      _id: { $in: orderItems.map((i) => i.product) },
+      _id: { $in: orderItems.map((i) => i.id) },
     }).session(session);
 
     const dbOrderItems = [];
@@ -44,9 +45,13 @@ export const createOrder = async (req, res, next) => {
     const { itemsPrice, taxPrice, totalPrice } = calculateTotal(dbOrderItems);
 
     const order = new Order({
+      checkoutId,
       orderItems: dbOrderItems,
       user: req.user.id,
-      shippingAddress,
+      shippingAddress : {
+        ...shippingAddress,
+        phone: shippingAddress.phoneNumber
+      },
       paymentMethod,
       itemsPrice,
       taxPrice,

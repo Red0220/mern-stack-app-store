@@ -1,10 +1,10 @@
 import { errorHandler } from "../middleware/errorHandler.js";
 
 export const validateOrderItems = async (item, productMap) => {
-  const product = productMap.get(item.product);
+  const product = productMap.get(item.id);
 
   if (!product) {
-    throw next(errorHandler(400, `Product not found: ${item.product}`));
+    throw errorHandler(400, `Product not found: ${item.product}`)
   }
   if (item.quantity <= 0) {
     throw next(
@@ -12,7 +12,7 @@ export const validateOrderItems = async (item, productMap) => {
     );
   }
   if (product.stock < item.quantity) {
-    throw next(errorHandler(400, `Insufficient stock for this product`));
+    throw errorHandler(400, `Insufficient stock for this product`);
   }
 
   return product;

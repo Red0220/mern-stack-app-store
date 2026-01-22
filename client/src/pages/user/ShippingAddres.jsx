@@ -62,9 +62,9 @@ const ShippingAddress = ({ data, setData, onNext }) => {
             </section>
           ))
         }
-        {/* <Button type='submit' >
+        <Button type='submit' >
           Continue to Payment
-        </Button> */}
+        </Button>
         {/* <button type="submit" className='w-full p-2 mt-4 border border-gray-300 rounded-md font-medium'> 
           Save Address
         </button> */}

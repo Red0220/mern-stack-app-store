@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { saveShippingAddress } from '../../redux/cart/cart.slice.js'
@@ -25,7 +25,8 @@ const Checkout = () => {
   } = useSelector((state) => state.cart || {});
   const [createOrder, { isLoading }] = useCreateOrderMutation();
   const dispatch = useDispatch();
-
+  
+  
   const [activeStep, setActiveStep] = useState(0);
   const [data, setData] = useState({
     fullName: '',
@@ -35,8 +36,9 @@ const Checkout = () => {
     city: '',
     postalCode: '',
     country: ''
-  }
-  )
+  });
+  const [orderId, setOrderId] = useState(null);
+  const checkoutId = useRef(crypto.randomUUID());
 
   useEffect(()=> {
     if (shippingAddress) setData(shippingAddress);
@@ -64,7 +66,14 @@ const Checkout = () => {
     }
   }, [cartItems, shippingAddress, paymentMethod]);
 
- const handleShippingNext = () => {
+ const handleShippingNext = async () => {
+  
+  if(orderId){
+    goNext();
+    return;
+  }
+  if(isLoading) return;
+
   const requiredFields = ['fullName', 'phoneNumber', 'address', 'city', 'postalCode', 'country'];
   const isValid = requiredFields.every(field => data[field].trim() !== '');
 
@@ -73,7 +82,24 @@ const Checkout = () => {
     return;
   }
   dispatch(saveShippingAddress(data));
-  goNext();
+
+  // continue to order step
+   try {
+   const res =  await createOrder({
+        checkoutId: checkoutId.current,
+        orderItems: cartItems,
+        shippingAddress: data,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        totalPrice
+     }).unwrap()
+      setOrderId(res._id);
+
+   } catch (error) {
+    console.log(error);
+   }
+  
  }
 
   return (
@@ -107,9 +133,15 @@ const Checkout = () => {
       </div>
       <Pagination
         canGoBack={activeStep > 0}
-        canGoNext={canAccessStep(activeStep + 1)}
+        canGoNext={canAccessStep(activeStep + 1) && !isLoading}
         onBack={goBack}
-        onNext={goNext}
+        onNext={()=> {
+          if (activeStep === 1) {
+            handleShippingNext();
+          } else {
+            goNext();
+          }
+        }}
         nextLabel={
           activeStep === 1
             ? "continue to order"
