@@ -14,8 +14,19 @@ export const createOrder = async (req, res, next) => {
   try {
     const { orderItems, shippingAddress, paymentMethod, checkoutId } = req.body;
 
+    if(!checkoutId){
+      return next(errorHandler(400, "Checkout ID is required"));
+    }
     if (orderItems && orderItems.length === 0) {
       return next(errorHandler(400, "No order items"));
+    }
+    const existingOrder = await Order.findOne({ checkoutId });
+    if (existingOrder) {
+      if(existingOrder.isCheckoutClosed){
+        return next(errorHandler(400, "This checkout session is already closed."));
+      }
+      await session.abortTransaction()
+      return res.status(200).json(existingOrder);
     }
 
     session.startTransaction();
@@ -58,6 +69,7 @@ export const createOrder = async (req, res, next) => {
       totalPrice,
       isPaid: false,
       isDelivered: false,
+      isCheckoutClosed: false,
     });
 
     const createdOrder = await order.save({ session });
@@ -90,6 +102,7 @@ export const createOrder = async (req, res, next) => {
 export const getOrderById = async (req, res, next) => {
 
   try {
+
     const order = await Order.findById(req.params.orderId).populate(
       "user",
       "name email",
@@ -147,6 +160,7 @@ export const updateOrderToPaid = async (req, res, next) => {
     }
     order.isPaid = true;
     order.paidAt = Date.now();
+    order.isCheckoutClosed = true;
     order.paymentResult = {
       id: req.body.id,
       status: req.body.status,

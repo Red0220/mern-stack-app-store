@@ -38,7 +38,10 @@ const Checkout = () => {
     country: ''
   });
   const [orderId, setOrderId] = useState(null);
+  const [order, setOrder]= useState(null);
   const checkoutId = useRef(crypto.randomUUID());
+
+  const checkoutLock = order?.isCheckoutClosed || orderId?.isPaid;
 
   useEffect(()=> {
     if (shippingAddress) setData(shippingAddress);
@@ -93,7 +96,9 @@ const Checkout = () => {
         itemsPrice,
         shippingPrice,
         totalPrice
-     }).unwrap()
+     }).unwrap();
+
+     setOrder(res);
       setOrderId(res._id);
 
    } catch (error) {
@@ -132,10 +137,11 @@ const Checkout = () => {
         )}
       </div>
       <Pagination
-        canGoBack={activeStep > 0}
+        canGoBack={activeStep > 0 && !checkoutLock}
         canGoNext={canAccessStep(activeStep + 1) && !isLoading}
         onBack={goBack}
         onNext={()=> {
+          if(checkoutLock) return;
           if (activeStep === 1) {
             handleShippingNext();
           } else {
@@ -143,7 +149,9 @@ const Checkout = () => {
           }
         }}
         nextLabel={
-          activeStep === 1
+          checkoutLock 
+          ? 'Completed' 
+          : activeStep === 1
             ? "continue to order"
             : activeStep === 2
               ? "Pay Now"

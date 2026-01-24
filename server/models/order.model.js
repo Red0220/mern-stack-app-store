@@ -4,7 +4,8 @@ const orderSchema = new mongoose.Schema({
     checkoutId: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
     user:{
         type : mongoose.Schema.Types.ObjectId,
@@ -51,7 +52,9 @@ const orderSchema = new mongoose.Schema({
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
-    deliveredAt: { type: Date }
+    deliveredAt: { type: Date },
+    isCheckoutClosed: { type: Boolean, default: false },
+    
 }, {
     timestamps: true
 })
